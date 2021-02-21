@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------#
-# Filename: asus_l410m_numpad.py                                /          \  #
-# Project : Asus_L410M_Numpad                                   |     ()     | #
+# Filename: apod_linux.py                                       /           \  #
+# Project : APOD_Linux                                          |     ()     | #
 # Date    : 02/17/2021                                          |            | #
 # Author  : Dana Hynes                                          |   \____/   | #
 # License : WTFPLv2                                              \          /  #
