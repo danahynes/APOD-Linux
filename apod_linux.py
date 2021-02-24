@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------#
-# Filename: apod_linux.py                                       /           \  #
+# Filename: apod_linux.py                                        /          \  #
 # Project : APOD_Linux                                          |     ()     | #
 # Date    : 02/17/2021                                          |            | #
 # Author  : Dana Hynes                                          |   \____/   | #

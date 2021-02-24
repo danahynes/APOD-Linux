@@ -1,17 +1,16 @@
-#!/usr/bin/env bash
+#! /bin/sh
 #------------------------------------------------------------------------------#
-# Filename: install.sh                                           /          \  #
+# Filename: apod_linux.sh                                        /          \  #
 # Project : APOD_Linux                                          |     ()     | #
 # Date    : 02/21/2021                                          |            | #
 # Author  : Dana Hynes                                          |   \____/   | #
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# copy the scripts to the locations
-sudo cp ./apod_linux.py /usr/bin
-sudo cp ./apod_linux.sh /etc/cron.daily
+# this file goes in /etc/cron.daily to run once a day or on boot
+# it is also important that the shebang uses sh and not bash!
 
-# start now
+# run the script
 python3 /usr/bin/apod_linux.py
 
 # -)

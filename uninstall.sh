@@ -7,12 +7,9 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# remove the cron job
-croncmd="python3 /usr/bin/apod_linux.py"
-( crontab -l | grep -v -F "$croncmd" ) | crontab -
-
-# delete the script
+# delete the scripts
 sudo rm -rf /usr/bin/apod_linux.py
+sudo rm -rf /etc/cron.daily/apod_linux.#!/bin/sh
 
 # N.B. we leave the hidden directory with the current wallpaper in it so the
 # desktop doesn't go black
