@@ -15,23 +15,23 @@ A small program that runs every day to set your wallpaper to NASA's Astronomy Pi
 # Installing
 
 To install, clone the git repo:
-```
+```bash
 foo@bar:~$ cd ~/Downloads
-foo@bar:~$ git clone https://github.com/danahynes/APOD_Linux
-foo@bar:~$ cd APOD_Linux
+foo@bar:~/Downloads$ git clone https://github.com/danahynes/APOD_Linux
+foo@bar:~/Downloads$ cd APOD_Linux
 ```
 
 Once you do that, you can install by:
-```
-foo@bar:~$ sudo ./install.sh
+```bash
+foo@bar:~/Downloads/APOD_Linux$ sudo ./install.sh
 ```
 You can also download the [latest release](http://github.com/danahynes/APOD_Linux/releases/latest), unzip it, and run the install.sh file from there.
 
 # Uninstalling
 
 To uninstall, go to the git directory and run:
-```
-foo@bar:~$ sudo ./uninstall.sh
+```bash
+foo@bar:~/Downloads/APOD_Linux$ sudo ./uninstall.sh
 ```
 
 # Notes
