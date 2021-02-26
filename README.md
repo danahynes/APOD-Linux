@@ -10,6 +10,8 @@
 
 A small program that runs every day to set your wallpaper to NASA's Astronomy Picture of the Day.
 
+![](screenshot.png)
+
 # Installing
 
 To install, clone the git repo:
