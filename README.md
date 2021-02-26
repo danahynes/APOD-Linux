@@ -23,7 +23,7 @@ Once you do that, you can install by:
 ```
 foo@bar:~$ sudo ./install.sh
 ```
-You can also download the [latest release](http://github.com/danahynes/APOD_Linux/releases), unzip it, and run the install.sh file from there.
+You can also download the [latest release](http://github.com/danahynes/APOD_Linux/releases/latest), unzip it, and run the install.sh file from there.
 
 # Uninstalling
 
