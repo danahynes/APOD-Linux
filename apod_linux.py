@@ -10,13 +10,19 @@
 import json
 import os
 import subprocess
+import time
 import urllib.request
+
+# global vars
+start_time = time.time()
+old_file_name = ''
+secs = 3600 # one hour
 
 # the hidden dir to store the wallpaper
 home_dir = os.path.expanduser('~')
 pic_dir = (home_dir + '/.apod_linux')
 
-# check it it already exists
+# check if dir already exists
 if not os.path.exists(pic_dir):
 
     # if not, try to make it
@@ -28,35 +34,59 @@ if not os.path.exists(pic_dir):
 
 # the url to load JSON from
 url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY'
+#url = 'https://api.nasa.gov/planetary/apod?api_key=h52ZNUOJcTB9yeNaUiEcAX4gx92WQdLHEHWRNeXw'
 
-# get the JSON and format it
-response = urllib.request.urlopen(url)
-byte_data = response.read()
-data = json.loads(byte_data)
+# the main loop
+while True:
 
-# make sure it's an image (sometimes it's a video)
-media_type = data['media_type']
-if not 'image' in media_type:
-    print('Not an image, freaking out...')
-    sys.exit(1)
+    # get the JSON and format it
+    response = urllib.request.urlopen(url)
+    byte_data = response.read()
+    data = json.loads(byte_data)
 
-# get the url to the actual image
-pic_url = data['hdurl']
+    # make sure it's an image (sometimes it's a video)
+    media_type = data['media_type']
+    if 'image' in media_type:
 
-# check the file ext
-file_ext = pic_url.split('.')[-1]
+        # get the url to the actual image
+        pic_url = data['hdurl']
 
-# format a new filename
-file_name = ('wallpaper.' + file_ext)
-pic_path = (pic_dir + '/' + file_name)
+        # get the new filename
+        file_name = pic_url.split('/')[-1]
 
-# download the full picture
-urllib.request.urlretrieve(pic_url, pic_path)
+        # make sure it's a new wallpaper
+        if not file_name == old_file_name:
 
-# call gsettings to set the wallpaper
-# N.B. THIS PART IS GNOME SPECIFIC
-cmd = 'gsettings set org.gnome.desktop.background picture-uri file://' + pic_path
-cmd = cmd.split()
-subprocess.call(cmd)
+            # store filename for comparison
+            old_file_name = file_name
+
+            # create a download file path
+            # N.B. we use a generic filename for the downloaded file so that it
+            # overwrites the old file, keeping only the newest wallpaper
+            file_ext = pic_url.split('.')[-1]
+            pic_path = (pic_dir + '/wallpaper.' + file_ext)
+
+            # download the full picture
+            urllib.request.urlretrieve(pic_url, pic_path)
+
+            try:
+                # call gsettings to set the wallpaper
+                # N.B. THIS PART IS GNOME SPECIFIC
+                cmd = 'gsettings set org.gnome.desktop.background picture-uri file://' + pic_path
+                cmd_array = cmd.split()
+                subprocess.call(cmd_array)
+            except OSError as e:
+                print(str(e))
+
+        # file hasn't changed, do nothing
+        else:
+            print('Same file, leaving wallpaper alone')
+
+    # apod might host a video/gif/mpeg
+    else:
+        print('Not an image, leaving wallpaper alone')
+
+    # sleep for the remaining secs
+    time.sleep(secs - ((time.time() - start_time) % secs))
 
 # -)

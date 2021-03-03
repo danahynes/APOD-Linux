@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/usr/bin/env bash
 #------------------------------------------------------------------------------#
 # Filename: apod_linux.sh                                        /          \  #
 # Project : APOD_Linux                                          |     ()     | #
@@ -7,10 +7,7 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# this file goes in /etc/cron.daily to run once a day or on boot
-# it is also important that the shebang uses sh and not bash!
-
-# run the script
-python3 /usr/bin/apod_linux.py
+# start the python script and fork it to run in the background
+/usr/bin/python3 /usr/bin/apod_linux.py &
 
 # -)

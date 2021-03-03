@@ -9,9 +9,6 @@
 
 # copy the scripts to the locations
 sudo cp ./apod_linux.py /usr/bin
-sudo cp ./apod_linux.sh /etc/cron.daily
-
-# start now
-python3 /usr/bin/apod_linux.py
+sudo cp ./apod_linux.sh /etc/profile.d
 
 # -)
