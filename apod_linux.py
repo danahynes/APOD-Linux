@@ -34,7 +34,6 @@ if not os.path.exists(pic_dir):
 
 # the url to load JSON from
 url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY'
-#url = 'https://api.nasa.gov/planetary/apod?api_key=h52ZNUOJcTB9yeNaUiEcAX4gx92WQdLHEHWRNeXw'
 
 # the main loop
 while True:
@@ -63,6 +62,8 @@ while True:
             # create a download file path
             # N.B. we use a generic filename for the downloaded file so that it
             # overwrites the old file, keeping only the newest wallpaper
+            # this may also result in more than one wallpaper if the file ext
+            # is different (i.e jpg vs. png, etc.)
             file_ext = pic_url.split('.')[-1]
             pic_path = (pic_dir + '/wallpaper.' + file_ext)
 
