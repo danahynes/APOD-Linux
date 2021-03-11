@@ -7,11 +7,18 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# N.B. we leave the hidden directory with the current wallpaper in it so the
-# desktop doesn't go black
+# get name of current user for hidden dir
+user=$(whoami)
+if [ "${user}" == "root" ]
+then
+  echo "Can't uninstall as root, don't run with sudo..."
+  exit 1
+fi
 
 # delete files from locations
-sudo rm /usr/bin/apod_linux.py
-sudo rm /etc/profile.d/apod_linux.sh
+sudo rm -rf /etc/profile.d/apod_linux_login.sh
+sudo rm -rf /lib/systemd/system-sleep/apod_linux_wake.sh
+sudo rm -rf /usr/bin/apod_linux.py
+sudo rm -rf "/home/${user}/.apod_linux"
 
 # -)
