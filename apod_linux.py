@@ -8,30 +8,31 @@
 #------------------------------------------------------------------------------#
 
 # imports
-import json 
+import json
+import logging
 import os
 import subprocess
 import time
 import urllib.request
 
-# wait for internet to come up
-# N.B. the script /etc/profile.d/apod_linux.sh forks this script, so a sleep
-# here does not hang the login process
-time.sleep(30)
-
 # the hidden dir to store the wallpaper
 home_dir = os.path.expanduser('~')
 pic_dir = (home_dir + '/.apod_linux')
 
-# check if dir already exists
-if not os.path.exists(pic_dir):
+# set up logging
+logging.basicConfig(filename=(pic_dir + '/apod_linux.log'), level=logging.DEBUG,
+    format='%(asctime)s - %(message)s')
 
-    # if not, try to make it
-    try:
-        os.mkdir(pic_dir)
-    except OSError as e:
-        print("Could not create directory, freaking out...")
-        sys.exit(1)
+# assume no old wallpaper
+pic_path = ''
+
+# log start
+logging.debug('starting script')
+
+# wait for internet to come up
+# N.B. the script /etc/profile.d/apod_linux_login.sh forks this script, so a
+# sleep here does not hang the login process
+time.sleep(30)
 
 # the url to load JSON from
 url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY'
@@ -59,6 +60,28 @@ if 'image' in media_type:
     # download the full picture
     urllib.request.urlretrieve(pic_url, pic_path)
 
+    # log result
+    logging.debug('downloaded new file')
+
+else:
+
+    # see if there is an old wallpaper
+    list = os.listdir(pic_dir)
+    if (len(list) > 0):
+        for f in list:
+
+            # make sure it's not the log
+            if ('wallpaper' in f):
+
+                # set pic_path to old wallpaper
+                pic_path = os.path.join(pic_dir, f)
+
+                # log result
+                logging.debug('using old file')
+                break
+
+# if there is a valid wallpaper somewhere
+if pic_path:
     try:
 
         # call gsettings to set the wallpaper
@@ -67,6 +90,11 @@ if 'image' in media_type:
         cmd_array = cmd.split()
         subprocess.call(cmd_array)
     except OSError as e:
-        print(str(e))
+        logging.debug(str(e))
+
+else:
+
+    # log result
+    logging.debug('no new file, no old file, doing nothing')
 
 # -)
