@@ -16,9 +16,9 @@ then
 fi
 
 # delete files from locations
+sudo rm -rf "/home/${user}/.apod_linux"
 sudo rm -rf /etc/profile.d/apod_linux_login.sh
 sudo rm -rf /lib/systemd/system-sleep/apod_linux_wake.sh
 sudo rm -rf /usr/bin/apod_linux.py
-sudo rm -rf "/home/${user}/.apod_linux"
 
 # -)
