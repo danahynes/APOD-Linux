@@ -13,6 +13,7 @@ import logging
 import os
 import subprocess
 import time
+import urllib.error
 import urllib.request
 
 # the hidden dir to store the wallpaper
@@ -20,14 +21,14 @@ home_dir = os.path.expanduser('~')
 pic_dir = (home_dir + '/.apod_linux')
 
 # set up logging
-logging.basicConfig(filename=(pic_dir + '/apod_linux.log'), level=logging.DEBUG,
-    format='%(asctime)s - %(message)s')
+logging.basicConfig(filename = (pic_dir + '/apod_linux.log'),
+    level = logging.DEBUG, format = '%(asctime)s - %(message)s')
 
 # assume no old wallpaper
 pic_path = ''
 
 # log start
-logging.debug('starting script')
+logging.debug('Starting script')
 
 # wait for internet to come up
 # N.B. the script /etc/profile.d/apod_linux_login.sh forks this script, so a
@@ -35,19 +36,25 @@ logging.debug('starting script')
 time.sleep(30)
 
 # the url to load JSON from
-url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY'
+apod_url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY'
+
+# assume no JSON (but with a valid key)
+apod_data = {'media_type':''}
 
 # get the JSON and format it
-response = urllib.request.urlopen(url)
-byte_data = response.read()
-data = json.loads(byte_data)
+try:
+    response = urllib.request.urlopen(apod_url)
+    byte_data = response.read()
+    apod_data = json.loads(byte_data)
+except urllib.error.URLError as e:
+    logging.debug('Could not get JSON, maybe no internet?')
 
 # make sure it's an image (sometimes it's a video)
-media_type = data['media_type']
+media_type = apod_data['media_type']
 if 'image' in media_type:
 
     # get the url to the actual image
-    pic_url = data['hdurl']
+    pic_url = apod_data['hdurl']
 
     # create a download file path
     # N.B. we use a generic filename for the downloaded file so that it
@@ -57,11 +64,15 @@ if 'image' in media_type:
     file_ext = pic_url.split('.')[-1]
     pic_path = (pic_dir + '/wallpaper.' + file_ext)
 
-    # download the full picture
-    urllib.request.urlretrieve(pic_url, pic_path)
+    try:
 
-    # log result
-    logging.debug('downloaded new file')
+        # download the full picture
+        urllib.request.urlretrieve(pic_url, pic_path)
+
+        # log result
+        logging.debug('Downloaded new file')
+    except urllib.error.URLError as e:
+        logging.debug('Could not get picture, maybe no internet?')
 
 else:
 
@@ -77,7 +88,7 @@ else:
                 pic_path = os.path.join(pic_dir, f)
 
                 # log result
-                logging.debug('using old file')
+                logging.debug('No new file, using old file')
                 break
 
 # if there is a valid wallpaper somewhere
@@ -86,7 +97,8 @@ if pic_path:
 
         # call gsettings to set the wallpaper
         # N.B. *** THIS PART IS GNOME SPECIFIC ***
-        cmd = 'gsettings set org.gnome.desktop.background picture-uri file://' + pic_path
+        cmd = 'gsettings set org.gnome.desktop.background picture-uri file://' \
+            + pic_path
         cmd_array = cmd.split()
         subprocess.call(cmd_array)
     except OSError as e:
@@ -95,6 +107,6 @@ if pic_path:
 else:
 
     # log result
-    logging.debug('no new file, no old file, doing nothing')
+    logging.debug('No new file, no old file, doing nothing')
 
 # -)
