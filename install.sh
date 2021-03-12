@@ -32,8 +32,8 @@ touch ./apod_linux_wake2.sh
 sed "s/REPLACE_USER/${user}/g" ./apod_linux_wake.sh > ./apod_linux_wake2.sh
 
 # change permissions and owner of apod_linux_wake
-sudo chmod +x /lib/systemd/system-sleep/apod_linux_wake2.sh
-sudo chown root:root /lib/systemd/system-sleep/apod_linux_wake2.sh
+sudo chmod +x ./apod_linux_wake2.sh
+sudo chown root:root ./apod_linux_wake2.sh
 
 # 3. move the script copy for wake
 if [ -d "/lib/systemd/system-sleep" ]
