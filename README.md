@@ -59,6 +59,8 @@ The wallpaper may not change based on the following conditions:
 
 The script does try to fall back to the last working picture if any of the above happen, however if it can't, it won't change your wallpaper so your system settings should still apply.
 
+You can check the log at ~/.apod_linux/apod_linux.log to find out if the script is working.
+
 If you're like me, and use a laptop, you probably don't log in/out very often, but only close your laptop lid to put the system to sleep. Running the script when a user logs in after sleep/wake was tricky, as Linux does not consider this an actual login, only a speedbump in the current session (you're not actually logging in, only unlocking the screen). That's one reason I wanted the script to run every hour, but this caused problems after I set up my laptop to dual-boot with Windows (along with other issues, so probably not the script's fault). The script would hang the login process, even with forking.
 
 The solution to this was to run the script as su after waking (wake scripts only run as root, and we already know that won't change the current user's wallpaper). For that, I needed a user name, so that is set during install. It's hacky, but it works. A better solution would be if systemd supported running user scripts after wake/enter password, but that's not something that will probably be coming soon.
