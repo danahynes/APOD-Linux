@@ -28,6 +28,7 @@ logging.basicConfig(filename = (pic_dir + '/apod_linux.log'),
 pic_path = ''
 
 # log start
+logging.debug('---------------------------------------------------------------')
 logging.debug('Starting script')
 
 # wait for internet to come up
