@@ -14,6 +14,7 @@ case "$1" in
   post)
 
     # run same script as login but with specified user
+    # su -s $(/usr/bin/env bash) -c /etc/profile.d/apod_linux_login.sh REPLACE_USER
     su -s /bin/bash -c /etc/profile.d/apod_linux_login.sh REPLACE_USER
     ;;
 esac
