@@ -7,12 +7,14 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# get name of current user for wake script
-user=$(whoami)
-if [ "${user}" == "root" ]
+# # get name of current user for wake script
+user=''
+user_test=$(whoami)
+if [ "${user_test}" == "root" ]
 then
-  echo "Can't install as root, don't run with sudo..."
-  exit 1
+  user=${SUDO_USER}
+else
+  user=${user_test}
 fi
 
 # 1. make the dir to store wallpaper
@@ -54,6 +56,7 @@ else
 fi
 
 # run the script now (runs as current user)
-/etc/profile.d/apod_linux_login.sh
+#su -s $(/usr/bin/env bash) -c /etc/profile.d/apod_linux_login.sh ${user}
+su -s /bin/bash -c /etc/profile.d/apod_linux_login.sh ${user}
 
 # -)
