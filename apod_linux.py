@@ -16,24 +16,28 @@ import time
 import urllib.error
 import urllib.request
 
-# the hidden dir to store the wallpaper
-home_dir = os.path.expanduser('~')
-pic_dir = (home_dir + '/.apod_linux')
-
 # set up logging
 logging.basicConfig(filename = (pic_dir + '/apod_linux.log'),
     level = logging.DEBUG, format = '%(asctime)s - %(message)s')
-
-# assume no old wallpaper
-pic_path = ''
 
 # log start
 logging.debug('---------------------------------------------------------------')
 logging.debug('Starting script')
 
+#-------------------------------------------------------------------------------
+# Initialize
+#-------------------------------------------------------------------------------
+
+# the hidden dir to store the wallpaper
+home_dir = os.path.expanduser('~')
+pic_dir = (home_dir + '/.apod_linux')
+
+# assume no old wallpaper
+pic_path = ''
+
 # wait for internet to come up
 # N.B. the script /etc/profile.d/apod_linux_login.sh forks this script, so a
-# sleep here does not hang the login process
+# sleep here does not hang the login/wake process
 time.sleep(30)
 
 # the url to load JSON from
