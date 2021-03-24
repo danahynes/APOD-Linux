@@ -17,7 +17,7 @@ import urllib.error
 import urllib.request
 
 # set up logging
-logging.basicConfig(filename = (pic_dir + '/apod_linux.log'),
+logging.basicConfig(filename = ('/var/log/apod_linux.log'),
     level = logging.DEBUG, format = '%(asctime)s - %(message)s')
 
 # log start
