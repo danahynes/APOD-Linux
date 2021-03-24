@@ -33,12 +33,16 @@ logging.debug('Starting script')
 #-------------------------------------------------------------------------------
 
 # assume no old wallpaper
-pic_path = ''
+pic_path = None
 
 # wait for internet to come up
 # N.B. the script /etc/profile.d/apod_linux_login.sh forks this script, so a
 # sleep here does not hang the login/wake process
 time.sleep(30)
+
+#-------------------------------------------------------------------------------
+# THIS PART IS APOD SPECIFIC TO GET pic_path
+#-------------------------------------------------------------------------------
 
 # the url to load JSON from
 apod_url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY'
@@ -57,19 +61,18 @@ except urllib.error.URLError as e:
 # make sure it's an image (sometimes it's a video)
 media_type = apod_data['media_type']
 if 'image' in media_type:
-
-    # get the url to the actual image
-    pic_url = apod_data['hdurl']
-
-    # create a download file path
-    # N.B. we use a generic filename for the downloaded file so that it
-    # overwrites the old file, keeping only the newest wallpaper.
-    # this may also result in more than one wallpaper if the file ext
-    # is different (i.e jpg vs. png, etc.)
-    file_ext = pic_url.split('.')[-1]
-    pic_path = (pic_dir + '/wallpaper.' + file_ext)
-
     try:
+
+        # get the url to the actual image
+        pic_url = apod_data['hdurl']
+
+        # create a download file path
+        # N.B. we use a generic filename for the downloaded file so that it
+        # overwrites the old file, keeping only the newest wallpaper.
+        # this may also result in more than one wallpaper if the file ext
+        # is different (i.e jpg vs. png, etc.)
+        file_ext = pic_url.split('.')[-1]
+        pic_path = (pic_dir + '/wallpaper.' + file_ext)
 
         # download the full picture
         urllib.request.urlretrieve(pic_url, pic_path)
@@ -79,7 +82,12 @@ if 'image' in media_type:
     except urllib.error.URLError as e:
         logging.debug('Could not get picture, maybe no internet?')
 
-else:
+#-------------------------------------------------------------------------------
+# DONE
+#-------------------------------------------------------------------------------
+
+# if we don't have a valid pic_path
+if pic_path == None:
 
     # see if there is an old wallpaper
     list = os.listdir(pic_dir)
@@ -97,7 +105,7 @@ else:
                 break
 
 # if there is a valid wallpaper somewhere
-if pic_path:
+if pic_path != None:
     try:
 
         # call gsettings to set the wallpaper
