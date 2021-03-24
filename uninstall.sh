@@ -8,11 +8,13 @@
 #------------------------------------------------------------------------------#
 
 # get name of current user for hidden dir
-user=$(whoami)
-if [ "${user}" == "root" ]
+user=''
+user_test=$(whoami)
+if [ "${user_test}" == "root" ]
 then
-  echo "Can't uninstall as root, don't run with sudo..."
-  exit 1
+  user=${SUDO_USER}
+else
+  user=${user_test}
 fi
 
 # delete files from locations
