@@ -108,8 +108,18 @@ Here is a flowchart of what the various scripts do:
 
 ![](flow.jpg)
 
+Also note that on elementary OS, this does not change you greeter preview:
+
+![](greeter.jpg)
+
+The top half of this window should show the current wallpaper, as it does when
+you set the wallpaper from the Settings app. I have a pretty good idea how to
+fix this, but it needs more testing as the last time I tried it, it tried to
+recursively delete my hard drive. YIKES!
+
 # TODO
 
 1. Set wallpaper on non-GNOME desktops
+1. Set wallpaper preview in GDM greeter
 
 # -)
