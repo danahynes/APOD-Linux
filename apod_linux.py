@@ -16,8 +16,12 @@ import time
 import urllib.error
 import urllib.request
 
+# the hidden dir to store the wallpaper
+home_dir = os.path.expanduser('~')
+pic_dir = (home_dir + '/.apod_linux')
+
 # set up logging
-logging.basicConfig(filename = ('/var/log/apod_linux.log'),
+logging.basicConfig(filename = (pic_dir + '/apod_linux.log'),
     level = logging.DEBUG, format = '%(asctime)s - %(message)s')
 
 # log start
@@ -27,10 +31,6 @@ logging.debug('Starting script')
 #-------------------------------------------------------------------------------
 # Initialize
 #-------------------------------------------------------------------------------
-
-# the hidden dir to store the wallpaper
-home_dir = os.path.expanduser('~')
-pic_dir = (home_dir + '/.apod_linux')
 
 # assume no old wallpaper
 pic_path = ''
