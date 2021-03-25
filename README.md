@@ -48,7 +48,6 @@ foo@bar:~$ sudo rm -rf /home/<USER>/.apod_linux
 
 where ```<USER>``` is your username.
 
-
 # Notes
 
 Originally, this program tried to use *anacron* to run a script once a day. But,
