@@ -7,7 +7,7 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# # get name of current user for wake script
+# get name of current user for wake script
 user=''
 user_test=$(whoami)
 if [ "${user_test}" == "root" ]
