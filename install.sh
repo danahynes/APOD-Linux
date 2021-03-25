@@ -19,6 +19,7 @@ fi
 
 # 1. make the dir to store wallpaper
 mkdir -p "/home/${user}/.apod_linux"
+sudo chown ${user}:${user} "/home/${user}/.apod_linux"
 
 # 2. copy the script for login
 if [ -d "/etc/profile.d" ]
