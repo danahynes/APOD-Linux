@@ -31,12 +31,20 @@ You can also download the
 [latest release](http://github.com/danahynes/APOD_Linux/releases/latest), unzip
 it, and run the install.sh file from there.
 
+**DO NOT USE SUDO TO INSTALL.**
+
+It causes set-wallpaper to try and recursively
+delete your entire hard drive. Bad, right? WTF!!! Still trying to figure this
+out. Installing without sudo seems to work. The install script will warn you if
+you use sudo, so you should be OK.
+
 # Uninstalling
 
 To uninstall, go to the git directory and run:
 ```bash
 foo@bar:~/Downloads/APOD_Linux$ ./uninstall.sh
 ```
+You can safely use sudo here, but it's not necessary.
 
 Or you can remove the files manually:
 ```bash
@@ -52,10 +60,10 @@ where ```<USER>``` is your username.
 
 Originally, this program tried to use *anacron* to run a script once a day. But,
 I could not get the *anacron* code to work, mostly because *anacron* wants to
-run as root, and all my code (mostly *gsettings*) wants to run as the current
-user. So I gave up and made it run when a user logs in. It then waits 30 seconds
-for an internet connection, downloads the latest APOD picture, and sets that as
-the wallpaper.
+run as root, and all my code (mostly ~~*gsettings*~~ *set-wallpaper*) wants to
+run as the current user. So I gave up and made it run when a user logs in. It
+then waits 30 seconds for an internet connection, downloads the latest APOD
+picture, and sets that as the wallpaper.
 
 The wallpaper may not change based on the following conditions:
 1. You do not have an internet connection.
@@ -90,13 +98,14 @@ One of Linux's biggest drawing points is, in my opinion, also one of it's
 biggest drawbacks: modularity. There are umpteen different distros with as many
 backends, configurations, and desktop environments. This app was written and
 tested on elementaryOS 5 Hera, which is based on Ubuntu with the GNOME desktop.
-As such, it uses a program called *gsettings* to change the desktop wallpaper.
-If you are using a similar GNOME-based distro, it will probably work for you.
-But if you're using something with, say, a KDE desktop then it probably won't,
-and you'll need to change the part of the script that says "THIS PART IS GNOME
-SPECIFIC" to allow you to change the wallpaper. I don't have a KDE system
-installed, and I certainly don't have the time, energy, or patience to test for
-every Desktop Environment out there.
+As such, it uses a program called ~~*gsettings*~~ *set_wallpaper* to change the
+desktop wallpaper.
+If you are using a similar ~~GNOME-based~~ elementaryOS distro, it will probably
+work for you. But if you're using something with, say, a KDE desktop then it
+probably won't, and you'll need to change the part of the script that says "THIS
+PART IS ~~GNOME~~ ELEMENTARY SPECIFIC" to allow you to change the wallpaper. I
+don't have a KDE system installed, and I certainly don't have the time, energy,
+or patience to test for every Desktop Environment out there.
 
 I know there is code out there to test for different DEs and set the wallpaper
 accordingly, but as I said I don't have any other working Linux setups right
@@ -107,18 +116,18 @@ Here is a flowchart of what the various scripts do:
 
 ![](flow.jpg)
 
-Also note that on elementary OS, this does not change you greeter preview:
+~~Also note that on elementary OS, this does not change you greeter preview:~~
 
 ![](greeter.jpg)
 
-The top half of this window should show the current wallpaper, as it does when
+~~The top half of this window should show the current wallpaper, as it does when
 you set the wallpaper from the Settings app. I have a pretty good idea how to
 fix this, but it needs more testing as the last time I tried it, it tried to
-recursively delete my hard drive. YIKES!
+recursively delete my hard drive. YIKES!~~
 
 # TODO
 
-1. Set wallpaper on non-GNOME desktops
-1. Set wallpaper preview in GDM greeter
+1. Set wallpaper on non-~~GNOME~~ elementaryOS desktops
+1. ~~Set wallpaper preview in GDM greeter~~
 
 # -)
