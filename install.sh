@@ -8,20 +8,22 @@
 #------------------------------------------------------------------------------#
 
 # get name of current user for wake script
-user=''
-user_test=$(whoami)
-if [ "${user_test}" == "root" ]
+user=$(whoami)
+if [ "${user}" == "root" ]
 then
-  user=${SUDO_USER}
-else
-  user=${user_test}
+  echo 'Do not run as root, it breaks set-wallpaper!'
+  exit 1
 fi
 
-# 1. make the dir to store wallpaper
+# make the dir to store wallpaper
 mkdir -p "/home/${user}/.apod_linux"
 sudo chown ${user}:${user} "/home/${user}/.apod_linux"
 
-# 2. copy the script for login
+# put current user into a copy of wake script
+touch ./apod_linux_wake2.sh
+sed "s/REPLACE_USER/${user}/g" ./apod_linux_wake.sh > ./apod_linux_wake2.sh
+
+# copy the script for login
 if [ -d "/etc/profile.d" ]
 then
   sudo cp ./apod_linux_login.sh /etc/profile.d/
@@ -30,15 +32,11 @@ else
   exit 1
 fi
 
-# put current user into a copy of wake script
-touch ./apod_linux_wake2.sh
-sed "s/REPLACE_USER/${user}/g" ./apod_linux_wake.sh > ./apod_linux_wake2.sh
-
 # change permissions and owner of apod_linux_wake
 sudo chmod +x ./apod_linux_wake2.sh
 sudo chown root:root ./apod_linux_wake2.sh
 
-# 3. move the script copy for wake
+# move the script copy for wake
 if [ -d "/lib/systemd/system-sleep" ]
 then
   sudo mv ./apod_linux_wake2.sh /lib/systemd/system-sleep/apod_linux_wake.sh
@@ -47,7 +45,7 @@ else
   exit 1
 fi
 
-# 4. copy the script for changing the wallpaper
+# copy the script for changing the wallpaper
 if [ -d "/usr/bin" ]
 then
   sudo cp ./apod_linux.py /usr/bin/
