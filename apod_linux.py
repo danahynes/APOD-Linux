@@ -41,7 +41,7 @@ pic_path = None
 time.sleep(30)
 
 #-------------------------------------------------------------------------------
-# THIS PART IS APOD SPECIFIC TO GET pic_path
+# THIS PART IS SPECIFIC TO APOD TO GET pic_path
 #-------------------------------------------------------------------------------
 
 # the url to load JSON from
@@ -109,9 +109,18 @@ if pic_path != None:
     try:
 
         # call gsettings to set the wallpaper
-        # N.B. *** THIS PART IS GNOME SPECIFIC ***
-        cmd = 'gsettings set org.gnome.desktop.background picture-uri file://' \
-            + pic_path
+
+#-------------------------------------------------------------------------------
+# THIS PART IS SPECIFIC TO ELEMENTARY OS AND MUST NOT BE CALLED USING SUDO!!!!
+#-------------------------------------------------------------------------------
+
+        cmd = '/usr/lib/x86_64-linux-gnu/io.elementary.contract.set-wallpaper '\
+                + pic_path
+
+#-------------------------------------------------------------------------------
+# DONE
+#-------------------------------------------------------------------------------
+
         cmd_array = cmd.split()
         subprocess.call(cmd_array)
     except OSError as e:
