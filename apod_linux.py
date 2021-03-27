@@ -108,12 +108,11 @@ if pic_path == None:
 if pic_path != None:
     try:
 
-        # call gsettings to set the wallpaper
-
 #-------------------------------------------------------------------------------
 # THIS PART IS SPECIFIC TO ELEMENTARY OS AND MUST NOT BE CALLED USING SUDO!!!!
 #-------------------------------------------------------------------------------
 
+        # call set-wallpaper to set the wallpaper
         cmd = '/usr/lib/x86_64-linux-gnu/io.elementary.contract.set-wallpaper '\
                 + pic_path
 
