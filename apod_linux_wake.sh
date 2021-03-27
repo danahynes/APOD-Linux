@@ -7,6 +7,9 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
+# N.B. this script is called at wake/unlock
+# it just calls the login script
+
 # get whether we are going to sleep or waking up
 case "$1" in
 
