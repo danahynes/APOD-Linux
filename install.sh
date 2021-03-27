@@ -14,7 +14,7 @@ if [ "${user}" == "root" ]
 then
 
   # DO NOT RUN AS ROOT!!! set-wallpaper will try to delete your hard drive!!!
-  echo 'Do not run install.sh as root, it breaks set-wallpaper!'
+  echo 'Do not run install.sh as root, bad things will happen!'
   exit 1
 fi
 
@@ -23,7 +23,7 @@ mkdir -p "/home/${user}/.apod_linux"
 
 # put current user into a copy of wake script
 touch ./apod_linux_wake2.sh
-sed "s/REPLACE_USER/${user}/g" ./apod_linux_wake.sh > ./apod_linux_wake2.sh
+sed "s/__REPLACE_USER__/${user}/g" ./apod_linux_wake.sh > ./apod_linux_wake2.sh
 sudo chmod +x ./apod_linux_wake2.sh
 sudo chown root:root ./apod_linux_wake2.sh
 
