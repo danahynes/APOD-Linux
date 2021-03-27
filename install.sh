@@ -8,6 +8,7 @@
 #------------------------------------------------------------------------------#
 
 # get name of current user for wake script
+# N.B. don't run as root - set-wallpaper has an issue!!!
 user=$(whoami)
 if [ "${user}" == "root" ]
 then
