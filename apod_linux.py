@@ -22,7 +22,7 @@ pic_dir = (home_dir + '/.apod_linux')
 
 # set up logging
 logging.basicConfig(filename = (pic_dir + '/apod_linux.log'),
-    level = logging.DEBUG, format = '%(asctime)s - %(message)s')
+        level = logging.DEBUG, format = '%(asctime)s - %(message)s')
 
 # log start
 logging.debug('---------------------------------------------------------------')
