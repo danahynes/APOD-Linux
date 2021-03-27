@@ -11,6 +11,8 @@
 user=$(whoami)
 if [ "${user}" == "root" ]
 then
+
+  # DO NOT RUN AS ROOT!!! set-wallpaper will try to delete your hard drive!!!
   echo 'Do not run as root, it breaks set-wallpaper!'
   exit 1
 fi
