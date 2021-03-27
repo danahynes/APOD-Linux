@@ -18,7 +18,7 @@ case "$1" in
 
     # run same script as login but with specified user
     # su -s $(/usr/bin/env bash) -c /etc/profile.d/apod_linux_login.sh REPLACE_USER
-    su -s /bin/bash -c /etc/profile.d/apod_linux_login.sh REPLACE_USER
+    su -s /bin/bash -c /etc/profile.d/apod_linux_login.sh __REPLACE_USER__
     ;;
 esac
 
