@@ -7,30 +7,21 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# get name of current user for wake script
-# N.B. don't run as root - set-wallpaper has an issue!!!
-user=$(whoami)
-if [ "${user}" == "root" ]
+# make sure we are installing as user (not root or sudo)
+USER=$(whoami)
+if [ "${USER}" == "root" ]
 then
-
-  # DO NOT RUN AS ROOT!!! set-wallpaper will try to delete your hard drive!!!
-  echo 'Do not run install.sh as root, bad things will happen!'
+  echo "Do not run as root or with sudo"
   exit 1
 fi
 
-# make the dir to store wallpaper
-mkdir -p "/home/${user}/.apod_linux"
-
-# put current user into a copy of wake script
-touch ./apod_linux_wake2.sh
-sed "s/__REPLACE_USER__/${user}/g" ./apod_linux_wake.sh > ./apod_linux_wake2.sh
-sudo chmod +x ./apod_linux_wake2.sh
-sudo chown root:root ./apod_linux_wake2.sh
+# make the dir to store wallpaper and log
+mkdir -p "${HOME}/.apod_linux"
 
 # copy the scripts to their locations
 sudo cp ./apod_linux_login.sh /etc/profile.d/
-sudo mv ./apod_linux_wake2.sh /lib/systemd/system-sleep/apod_linux_wake.sh
-sudo cp ./apod_linux.py /usr/bin/
+sudo cp ./apod_linux_unlock.sh /usr/bin
+sudo cp ./apod_linux.py /usr/bin
 
 # run the script now (runs as current user)
 /etc/profile.d/apod_linux_login.sh

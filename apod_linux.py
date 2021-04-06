@@ -2,7 +2,7 @@
 #------------------------------------------------------------------------------#
 # Filename: apod_linux.py                                        /          \  #
 # Project : APOD_Linux                                          |     ()     | #
-# Date    : 02/17/2021                                          |            | #
+# Date    : 02/12/2021                                          |            | #
 # Author  : Dana Hynes                                          |   \____/   | #
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
@@ -12,43 +12,47 @@ import json
 import logging
 import os
 import subprocess
+import sys
 import time
 import urllib.error
 import urllib.request
 
-# the hidden dir to store the wallpaper
-home_dir = os.path.expanduser('~')
-pic_dir = (home_dir + '/.apod_linux')
-
-# set up logging
-logging.basicConfig(filename = (pic_dir + '/apod_linux.log'),
-        level = logging.DEBUG, format = '%(asctime)s - %(message)s')
-
-# log start
-logging.debug('---------------------------------------------------------------')
-logging.debug('Starting script')
+# TODO: don't keep new pic in folder if successfully applied
 
 #-------------------------------------------------------------------------------
 # Initialize
 #-------------------------------------------------------------------------------
 
-# assume no old wallpaper
-pic_path = None
+# N.B. need pic_dir before setting up logging
+
+# get current user's home dir
+home_dir = os.path.expanduser('~')
+
+# the hidden dir to store the wallpaper and log file
+pic_dir = os.path.join(home_dir, '.apod_linux')
+
+# get log file name`
+log_name = os.path.join(pic_dir, 'apod_linux.log')
+
+# set up logging
+logging.basicConfig(filename = log_name, level = logging.DEBUG,
+        format = '%(asctime)s - %(message)s')
+
+# log start
+logging.debug('---------------------------------------------------------------')
+logging.debug('Starting script')
 
 # wait for internet to come up
-# N.B. the script /etc/profile.d/apod_linux_login.sh forks this script, so a
-# sleep here does not hang the login/wake process
+# N.B. the scripts apod_linux_login.sh and apod_linux_unlock.sh fork this
+# script, so a sleep here does not hang the login/unlock process
 time.sleep(30)
 
 #-------------------------------------------------------------------------------
-# THIS PART IS SPECIFIC TO APOD TO GET pic_path
+# Get JSON from apod.nasa.gov
 #-------------------------------------------------------------------------------
 
 # the url to load JSON from
 apod_url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY'
-
-# assume no JSON (but with a valid key)
-apod_data = {'media_type':''}
 
 # get the JSON and format it
 try:
@@ -57,6 +61,17 @@ try:
     apod_data = json.loads(byte_data)
 except urllib.error.URLError as e:
     logging.debug('Could not get JSON, maybe no internet?')
+    sys.exit(1)
+
+#-------------------------------------------------------------------------------
+# Get pic from apod.nasa.gov
+#-------------------------------------------------------------------------------
+
+# assume no old wallpaper
+pic_name = None
+
+# pic_path is pic_dir + pic_name
+pic_path = None
 
 # make sure it's an image (sometimes it's a video)
 media_type = apod_data['media_type']
@@ -67,12 +82,9 @@ if 'image' in media_type:
         pic_url = apod_data['hdurl']
 
         # create a download file path
-        # N.B. we use a generic filename for the downloaded file so that it
-        # overwrites the old file, keeping only the newest wallpaper.
-        # this may also result in more than one wallpaper if the file ext
-        # is different (i.e jpg vs. png, etc.)
         file_ext = pic_url.split('.')[-1]
-        pic_path = (pic_dir + '/wallpaper.' + file_ext)
+        pic_name = 'apod_wallpaper.' + file_ext
+        pic_path = os.path.join(pic_dir, pic_name)
 
         # download the full picture
         urllib.request.urlretrieve(pic_url, pic_path)
@@ -80,31 +92,14 @@ if 'image' in media_type:
         # log result
         logging.debug('Downloaded new file')
     except urllib.error.URLError as e:
-        logging.debug('Could not get picture, maybe no internet?')
+        logging.debug('Could not get new file, maybe no internet?')
+        sys.exit(1)
 
-#-------------------------------------------------------------------------------
-# DONE
-#-------------------------------------------------------------------------------
+else:
+    logging.debug('Not an image, doing nothing')
+    sys.exit(0)
 
-# if we don't have a valid pic_path
-if pic_path == None:
-
-    # see if there is an old wallpaper
-    list = os.listdir(pic_dir)
-    if (len(list) > 0):
-        for f in list:
-
-            # make sure it's not the log
-            if ('wallpaper' in f):
-
-                # set pic_path to old wallpaper
-                pic_path = os.path.join(pic_dir, f)
-
-                # log result
-                logging.debug('No new file, using old file')
-                break
-
-# if there is a valid wallpaper somewhere
+# if we have a valid pic_path
 if pic_path != None:
     try:
 
@@ -112,22 +107,17 @@ if pic_path != None:
 # THIS PART IS SPECIFIC TO ELEMENTARY OS AND MUST NOT BE CALLED USING SUDO!!!!
 #-------------------------------------------------------------------------------
 
-        # call set-wallpaper to set the wallpaper
         cmd = '/usr/lib/x86_64-linux-gnu/io.elementary.contract.set-wallpaper '\
                 + pic_path
+        cmd_array = cmd.split()
+        subprocess.call(cmd_array)
 
 #-------------------------------------------------------------------------------
 # DONE
 #-------------------------------------------------------------------------------
 
-        cmd_array = cmd.split()
-        subprocess.call(cmd_array)
     except OSError as e:
         logging.debug(str(e))
-
-else:
-
-    # log result
-    logging.debug('No new file, no old file, doing nothing')
+        sys.exit(1)
 
 # -)

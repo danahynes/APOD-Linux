@@ -9,7 +9,7 @@
 # APOD_Linux
 ## "It mostly works™"
 
-A small program that runs at every login/wake to set your wallpaper to NASA's
+A small program that runs at every login/unlock to set your wallpaper to NASA's
 Astronomy Picture of the Day.
 
 ![](screenshot.png)
@@ -33,10 +33,9 @@ it, and run the install.sh file from there.
 
 **DO NOT USE SUDO TO INSTALL!**
 
-There is a bug in set-wallpaper that causes it to try and recursively delete
-your entire hard drive if run as sudo. Bad, right? WTF!!! Installing without
-sudo seems to work. The install script will warn you if you use sudo, so you
-should be OK.
+There is a bug in set-wallpaper that causes it to try and delete your install
+folder if run as sudo. Bad, right? WTF!!! Installing without sudo seems to work.
+The install script will warn you if you use sudo, so you should be OK.
 
 # Uninstalling
 
@@ -48,10 +47,10 @@ You can safely use sudo here, but it's not necessary.
 
 Or you can remove the files manually:
 ```bash
-foo@bar:~$ sudo rm -rf /etc/profile.d/apod_linux_login.sh
-foo@bar:~$ sudo rm -rf /lib/systemd/system-sleep/apod_linux_wake.sh
-foo@bar:~$ sudo rm -rf /usr/bin/apod_linux.py
 foo@bar:~$ sudo rm -rf /home/<USER>/.apod_linux
+foo@bar:~$ sudo rm -rf /etc/profile.d/apod_linux_login.sh
+foo@bar:~$ sudo rm -rf /usr/bin/apod_linux_unlock.sh
+foo@bar:~$ sudo rm -rf /usr/bin/apod_linux.py
 ```
 
 where ```<USER>``` is your username.
@@ -87,12 +86,9 @@ run every hour, but this caused problems after I set up my laptop to dual-boot
 with Windows (along with other issues, so probably not the script's fault). The
 script would hang the login process, even with forking.
 
-The solution to this was to run the script as su after waking (wake scripts only
-run as root, and we already know that won't change the current user's
-wallpaper). For that, I needed a user name, so that is set during install. It's
-hacky, but it works. A better solution would be if systemd supported running
-user scripts after wake/enter password, but that's not something that will
-probably be coming soon.
+The solution to this was to run the script as after unlocking. For that, I
+needed a script that monitored for an unlock event. Luckily I found some good
+examples on the interwebs, and the result is *apod_linux_unlock.sh*.
 
 One of Linux's biggest drawing points is, in my opinion, also one of it's
 biggest drawbacks: modularity. There are umpteen different distros with as many
@@ -117,6 +113,7 @@ Here is a flowchart of what the various scripts do:
 
 # TODO
 
+1. use *feh* or similar to overlay description on wallpaper (as an option)
 1. Set wallpaper on non-elementaryOS desktops
 
 # -)
