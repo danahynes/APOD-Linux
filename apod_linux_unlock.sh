@@ -11,12 +11,12 @@
 # TODO: find out more about -y and -d switches
 # -d is probably for --dest which is for where the messages go (to the login
 # manager)
-# TODO: shorten this to a grep -q statement
 gdbus monitor -y -d org.freedesktop.login1 |
 while read LINE
 do
 
     # if we have an unlock event
+    # TODO: shorten this to a grep -q statement
     RES=$(echo "${LINE}" | grep -c "Session.Unlock")
     if [ "${RES}" == "1" ]
     then
