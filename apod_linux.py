@@ -68,7 +68,7 @@ except urllib.error.URLError as e:
 #-------------------------------------------------------------------------------
 
 # assume no old wallpaper
-pic_name = None
+#pic_name = None
 
 # pic_path is pic_dir + pic_name
 pic_path = None
