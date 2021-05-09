@@ -9,8 +9,8 @@
 # APOD_Linux
 ## "It mostly works™"
 
-A small program that runs at every login/unlock to set your wallpaper to NASA's
-Astronomy Picture of the Day.
+A small program that runs at every login/unlock to set your wallpaper to
+NASA's Astronomy Picture of the Day.
 
 ![](screenshot.png)
 
@@ -33,9 +33,11 @@ it, and run the install.sh file from there.
 
 **DO NOT USE SUDO TO INSTALL!**
 
-There is a bug in set-wallpaper that causes it to try and delete your install
-folder if run as sudo. Bad, right? WTF!!! Installing without sudo seems to work.
-The install script will warn you if you use sudo, so you should be OK.
+There is a bug in *set-wallpaper* that causes it to try and delete everything in
+your current folder if run as sudo. This is because it's looking for an *env*
+variable that is not set. Bad, right? WTF!!! Installing without sudo
+seems to work. The install script will warn you if you use sudo, so you should
+be OK.
 
 # Uninstalling
 
@@ -47,22 +49,43 @@ You can safely use sudo here, but it's not necessary.
 
 Or you can remove the files manually:
 ```bash
-foo@bar:~$ sudo rm -rf /home/<USER>/.apod_linux
+foo@bar:~$ sudo rm -rf /home/USER/.apod_linux
 foo@bar:~$ sudo rm -rf /etc/profile.d/apod_linux_login.sh
 foo@bar:~$ sudo rm -rf /usr/bin/apod_linux_unlock.sh
 foo@bar:~$ sudo rm -rf /usr/bin/apod_linux.py
+#foo@bar:~$ sudo rm -rf /usr/bin/apod_linux_caption.sh
 ```
 
-where ```<USER>``` is your username.
+where USER is your username.
+
+
+<!--
+# Update
+
+The image can now have a caption based on the
+*/home/USER/.apod_linux/apod_linux.conf* file.
+If the file contains the line *CAPTION=1*, a caption will be applied to the
+wallpaper. The file may also contain the line *POSITION=XX* with XX equaling
+values including "TR" (top right), "BR" (bottom right), "TL" (top left), or "BL"
+(bottom left). Other options include the text color and the caption bubble's
+background, width of the caption, font size, border size, corner rounding, etc.
+
+The default is to put the caption in the bottom right, with white text on a
+black background with 25% opacity.
+
+Lines can be commented out using a hash mark (#) at the beginning of the line.
+White space is allowed at the beginning and end of a line, and around the equals
+sign. See the */home/USER/.apod_linux/apod_linux.conf* file for more info.
+-->
 
 # Notes
 
 Originally, this program tried to use *anacron* to run a script once a day. But,
 I could not get the *anacron* code to work, mostly because *anacron* wants to
 run as root, and  my code (mostly *set-wallpaper*) wants to run as the current
-user. So I gave up and made it run when a user logs in. It then waits 30 seconds
-for an internet connection, downloads the latest APOD picture, and sets that as
-the wallpaper.
+user. So I gave up and made it run when a user logs in, or unlocks the screen.
+It then waits 30 seconds for an internet connection, downloads the latest APOD
+picture, and sets that as the wallpaper.
 
 The wallpaper may not change based on the following conditions:
 1. You do not have an internet connection.
@@ -74,8 +97,8 @@ The script does try to fall back to the last working picture if any of the above
 happen, however if it can't, it won't change your wallpaper so your system
 settings should still apply.
 
-You can check the log at ~/.apod_linux/apod_linux.log to find out if the script
-is working, and what it's doing.
+You can check the log at */home/USER/.apod_linux/apod_linux.log* to find out if
+the script is working, and what it's doing.
 
 If you're like me, and use a laptop, you probably don't log in/out very often,
 but only close your laptop lid to put the system to sleep. Running the script
@@ -86,7 +109,7 @@ run every hour, but this caused problems after I set up my laptop to dual-boot
 with Windows (along with other issues, so probably not the script's fault). The
 script would hang the login process, even with forking.
 
-The solution to this was to run the script as after unlocking. For that, I
+The solution to this was to run the script after unlocking. For that, I
 needed a script that monitored for an unlock event. Luckily I found some good
 examples on the interwebs, and the result is *apod_linux_unlock.sh*.
 
@@ -105,13 +128,14 @@ accordingly, but as I said I don't have any other working Linux setups right
 now, so if this app doesn't work for you, feel free to fork it, change it, and
 send a pull request or a DM and I'll look into it.
 
+<!--
 Here is a flowchart of what the various scripts do:
 
 ![](flow.jpg)
+-->
 
-# TODO
+TODO
 
-1. use *feh* or similar to overlay description on wallpaper (as an option)
 1. Set wallpaper on non-elementaryOS desktops
 
 # -)

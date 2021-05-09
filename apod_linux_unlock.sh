@@ -8,22 +8,28 @@
 #------------------------------------------------------------------------------#
 
 # watch dbus for unlock event
-# TODO: find out more about -y and -d switches
-# -d is probably for --dest which is for where the messages go (to the login
-# manager)
-gdbus monitor -y -d org.freedesktop.login1 |
-while read LINE
-do
+gdbus monitor --system --dest org.freedesktop.login1 |
+{
+  while read LINE
+  do
+    # search line for keyword and return number of matches (-c: count matches)
+    COUNT=$(echo "${LINE}" | grep -c "Session.Unlock")
 
-    # if we have an unlock event
-    # TODO: shorten this to a grep -q statement
-    RES=$(echo "${LINE}" | grep -c "Session.Unlock")
-    if [ "${RES}" == "1" ]
+    # if we found keyword
+    if [ "${COUNT}" == "1" ]
     then
 
+      # let the log know whats up
+      echo "Unlock" >> "${HOME}/.apod_linux/apod_linux.log"
+
       # do the thing now (at unlock)
-      /usr/bin/apod_linux.py &
+      # N.B. we fork it so this loop doesn't get stuck waiting for the
+      # sleep in the python script - on the off chance we get two unlock
+      # events within the sleep time (sleeping doesn't stop the script -
+      # only a logout or reboot will stop it)
+      python3 /usr/bin/apod_linux.py & disown
     fi
-done
+  done
+}
 
 # -)

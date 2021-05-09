@@ -11,13 +11,12 @@
 import json
 import logging
 import os
+import shutil
 import subprocess
 import sys
 import time
 import urllib.error
 import urllib.request
-
-# TODO: don't keep new pic in folder if successfully applied
 
 #-------------------------------------------------------------------------------
 # Initialize
@@ -67,9 +66,6 @@ except urllib.error.URLError as e:
 # Get pic from apod.nasa.gov
 #-------------------------------------------------------------------------------
 
-# assume no old wallpaper
-#pic_name = None
-
 # pic_path is pic_dir + pic_name
 pic_path = None
 
@@ -83,7 +79,7 @@ if 'image' in media_type:
 
         # create a download file path
         file_ext = pic_url.split('.')[-1]
-        pic_name = 'apod_wallpaper.' + file_ext
+        pic_name = 'apod_linux_wallpaper.' + file_ext
         pic_path = os.path.join(pic_dir, pic_name)
 
         # download the full picture
@@ -99,25 +95,54 @@ else:
     logging.debug('Not an image, doing nothing')
     sys.exit(0)
 
+    # shutil.copy("/home/dana/Downloads/ZodiacalNight.jpg", "/home/dana/.apod_linux/apod_linux_wallpaper.jpg")
+    # pic_path = "/home/dana/.apod_linux/apod_linux_wallpaper.jpg"
+    # apod_data = {'explanation':'This is some fake text because there is no picture today'}
+
+#-------------------------------------------------------------------------------
+# Run caption script
+#-------------------------------------------------------------------------------
+
 # if we have a valid pic_path
 if pic_path != None:
     try:
+
+        # get location of caption script
+        cap_path = '/usr/bin/apod_linux_caption.sh'
+
+        # get text to send
+        cap_text = apod_data['explanation']
+
+        # call the caption script with text and pic path
+        subprocess.call([cap_path, pic_path, cap_text])
+
+    except OSError as e:
+        logging.debug(str(e))
+        sys.exit(1)
 
 #-------------------------------------------------------------------------------
 # THIS PART IS SPECIFIC TO ELEMENTARY OS AND MUST NOT BE CALLED USING SUDO!!!!
 #-------------------------------------------------------------------------------
 
-        cmd = '/usr/lib/x86_64-linux-gnu/io.elementary.contract.set-wallpaper '\
-                + pic_path
-        cmd_array = cmd.split()
-        subprocess.call(cmd_array)
+# if we have a valid pic_path
+if pic_path != None:
+    try:
 
-#-------------------------------------------------------------------------------
-# DONE
-#-------------------------------------------------------------------------------
+        # get location of script
+        cmd = '/usr/lib/x86_64-linux-gnu/io.elementary.contract.set-wallpaper'
+
+        # call the script with pic path
+        subprocess.call([cmd, pic_path])
 
     except OSError as e:
         logging.debug(str(e))
         sys.exit(1)
+
+
+# TODO: don't keep new pic in folder if successfully applied
+
+#-------------------------------------------------------------------------------
+# DONE
+#-------------------------------------------------------------------------------
 
 # -)

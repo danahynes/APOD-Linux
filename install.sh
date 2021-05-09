@@ -7,6 +7,8 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
+# TODO: fix flow.jpg and readme
+
 # make sure we are installing as user (not root or sudo)
 USER=$(whoami)
 if [ "${USER}" == "root" ]
@@ -15,15 +17,25 @@ then
   exit 1
 fi
 
-# make the dir to store wallpaper and log
-mkdir -p "${HOME}/.apod_linux"
+INSTALL_DIR="${HOME}/.apod_linux"
 
-# copy the scripts to their locations
-sudo cp ./apod_linux_login.sh /etc/profile.d/
+# make the dir to store wallpaper and log (as user)
+mkdir -p "${INSTALL_DIR}"
+
+# install the conf file (as user)
+cp ./apod_linux.conf "${INSTALL_DIR}"
+
+# make a log file now in case anyone needs it before the py script runs (the py
+# logging system will create the file if needed, but bash scripts won't)
+touch "${INSTALL_DIR}/apod_linux.log"
+
+# copy the scripts to their locations (needs admin hence sudo)
+sudo cp ./apod_linux_login.sh /etc/profile.d
 sudo cp ./apod_linux_unlock.sh /usr/bin
 sudo cp ./apod_linux.py /usr/bin
+#sudo cp ./apod_linux_caption.sh /usr/bin
 
-# run the script now (runs as current user)
-/etc/profile.d/apod_linux_login.sh
+# run the script now (as user) (fork and release as child)
+/etc/profile.d/apod_linux_login.sh & disown
 
 # -)

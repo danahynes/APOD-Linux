@@ -12,5 +12,6 @@ sudo rm -rf "${HOME}/.apod_linux"
 sudo rm -rf /etc/profile.d/apod_linux_login.sh
 sudo rm -rf /usr/bin/apod_linux_unlock.sh
 sudo rm -rf /usr/bin/apod_linux.py
+#sudo rm -rf /usr/bin/apod_linux_caption.sh
 
 # -)
