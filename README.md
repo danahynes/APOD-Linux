@@ -41,25 +41,25 @@ be OK.
 
 # Uninstalling
 
-To uninstall, go to the git directory and run:
+To uninstall, go to the apod directory and run:
 ```bash
-foo@bar:~/Downloads/APOD_Linux$ ./uninstall.sh
+foo@bar:~/.apod_linux$ ./uninstall.sh
 ```
 You can safely use sudo here, but it's not necessary.
 
 Or you can remove the files manually:
 ```bash
+foo@bar:~$ pkill -f /usr/bin/apod_linux_caption.sh
 foo@bar:~$ sudo rm -rf /home/USER/.apod_linux
-foo@bar:~$ sudo rm -rf /etc/profile.d/apod_linux_login.sh
-foo@bar:~$ sudo rm -rf /usr/bin/apod_linux_unlock.sh
-foo@bar:~$ sudo rm -rf /usr/bin/apod_linux.py
-#foo@bar:~$ sudo rm -rf /usr/bin/apod_linux_caption.sh
+foo@bar:~$ sudo rm -f /etc/profile.d/apod_linux_login.sh
+foo@bar:~$ sudo rm -f /usr/bin/apod_linux_unlock.sh
+foo@bar:~$ sudo rm -f /usr/bin/apod_linux.py
+foo@bar:~$ sudo rm -f /usr/bin/apod_linux_caption.sh
 ```
 
 where USER is your username.
 
 
-<!--
 # Update
 
 The image can now have a caption based on the
@@ -76,7 +76,7 @@ black background with 25% opacity.
 Lines can be commented out using a hash mark (#) at the beginning of the line.
 White space is allowed at the beginning and end of a line, and around the equals
 sign. See the */home/USER/.apod_linux/apod_linux.conf* file for more info.
--->
+
 
 # Notes
 

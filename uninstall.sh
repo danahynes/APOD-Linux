@@ -7,11 +7,14 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
+# stop the unlock listener
+pkill -f "/usr/bin/apod_linux_unlock.sh"
+
 # delete dirs/files from locations
 sudo rm -rf "${HOME}/.apod_linux"
-sudo rm -rf /etc/profile.d/apod_linux_login.sh
-sudo rm -rf /usr/bin/apod_linux_unlock.sh
-sudo rm -rf /usr/bin/apod_linux.py
-#sudo rm -rf /usr/bin/apod_linux_caption.sh
+sudo rm -f "/etc/profile.d/apod_linux_login.sh"
+sudo rm -f "/usr/bin/apod_linux_unlock.sh"
+sudo rm -f "/usr/bin/apod_linux.py"
+sudo rm -f "/usr/bin/apod_linux_caption.sh"
 
 # -)
