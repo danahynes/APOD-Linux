@@ -164,7 +164,7 @@ convert \
   -matte "${APOD_MASK_IMG}" \
   -compose DstIn \
   -composite "${APOD_CAPT_IMG}" \
-  >> "${APOD_LOG_FILE}"
+  >> "${APOD_LOG_FILE}" 2>&1
 
 # get the overhang after scaling
 X_OVER=$(echo "scale=2;(${SCALED_W}-${SCREEN_W})/2" | bc)
