@@ -7,6 +7,9 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
+# stop the unlock listener (so we don't run it twice)
+pkill -f "/usr/bin/apod_linux_unlock.sh"
+
 # let the log know whats up
 echo "Login" >> "${HOME}/.apod_linux/apod_linux.log"
 
