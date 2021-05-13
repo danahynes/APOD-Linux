@@ -12,7 +12,7 @@ gdbus monitor --system --dest org.freedesktop.login1 |
 {
   while read LINE
   do
-    
+
     # search line for keyword and return number of matches (-c: count matches)
     COUNT=$(echo "${LINE}" | grep -c "Session.Unlock")
 
