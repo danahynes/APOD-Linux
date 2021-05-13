@@ -7,8 +7,6 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# TODO: fix flow.jpg and readme
-
 # make sure we are installing as user (not root or sudo)
 USER=$(whoami)
 if [ "${USER}" == "root" ]
