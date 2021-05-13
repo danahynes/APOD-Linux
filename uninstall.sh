@@ -7,14 +7,24 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
+# show some progress
+sudo echo "Uninstalling APOD_Linux..."
+
 # stop the unlock listener
-pkill -f "/usr/bin/apod_linux_unlock.sh"
+echo -n "Stopping unlock listener... "
+sudo pkill -f "/usr/bin/apod_linux_unlock.sh"
+echo "Done"
 
 # delete dirs/files from locations
+echo -n "Deleting all data and scripts... "
 sudo rm -rf "${HOME}/.apod_linux"
 sudo rm -f "/etc/profile.d/apod_linux_login.sh"
 sudo rm -f "/usr/bin/apod_linux_unlock.sh"
 sudo rm -f "/usr/bin/apod_linux.py"
 sudo rm -f "/usr/bin/apod_linux_caption.sh"
+echo "Done"
+
+# show that we are done
+echo "APOD_Linux uninstalled"
 
 # -)
