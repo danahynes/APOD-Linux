@@ -138,11 +138,15 @@ if pic_path != None:
         logging.debug(str(e))
         sys.exit(1)
 
-
-# TODO: don't keep new pic in folder if successfully applied
-
 #-------------------------------------------------------------------------------
 # DONE
 #-------------------------------------------------------------------------------
+
+try:
+
+    # remove file since its been copied everywhere
+    os.remove(pic_path)
+except OSError as e:
+    logging.debug(str(e))
 
 # -)
