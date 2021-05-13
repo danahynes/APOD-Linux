@@ -49,16 +49,13 @@ You can safely use sudo here, but it's not necessary.
 
 Or you can remove the files manually:
 ```bash
-foo@bar:~$ pkill -f /usr/bin/apod_linux_caption.sh
-foo@bar:~$ sudo rm -rf /home/USER/.apod_linux
-foo@bar:~$ sudo rm -f /etc/profile.d/apod_linux_login.sh
-foo@bar:~$ sudo rm -f /usr/bin/apod_linux_unlock.sh
-foo@bar:~$ sudo rm -f /usr/bin/apod_linux.py
-foo@bar:~$ sudo rm -f /usr/bin/apod_linux_caption.sh
+foo@bar:~$ pkill -f "/usr/bin/apod_linux_unlock.sh"
+foo@bar:~$ sudo rm -rf "${HOME}/.apod_linux"
+foo@bar:~$ sudo rm -f "/etc/profile.d/apod_linux_login.sh"
+foo@bar:~$ sudo rm -f "/usr/bin/apod_linux_unlock.sh"
+foo@bar:~$ sudo rm -f "/usr/bin/apod_linux.py"
+foo@bar:~$ sudo rm -f "/usr/bin/apod_linux_caption.sh"
 ```
-
-where USER is your username.
-
 
 # Update
 
@@ -128,11 +125,9 @@ accordingly, but as I said I don't have any other working Linux setups right
 now, so if this app doesn't work for you, feel free to fork it, change it, and
 send a pull request or a DM and I'll look into it.
 
-<!--
 Here is a flowchart of what the various scripts do:
 
-![](flow.jpg)
--->
+![](APOD_Linux.jpg)
 
 TODO
 
