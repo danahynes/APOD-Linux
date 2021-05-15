@@ -22,7 +22,7 @@ import urllib.request
 # Initialize
 #-------------------------------------------------------------------------------
 
-# N.B. need pic_dir before setting up logging
+# NB: need pic_dir before setting up logging
 
 # get current user's home dir
 home_dir = os.path.expanduser('~')
@@ -42,7 +42,7 @@ logging.debug('---------------------------------------------------------------')
 logging.debug('Starting script')
 
 # wait for internet to come up
-# N.B. the scripts apod_linux_login.sh and apod_linux_unlock.sh fork this
+# NB: the scripts apod_linux_login.sh and apod_linux_unlock.sh fork this
 # script, so a sleep here does not hang the login/unlock process
 time.sleep(30)
 

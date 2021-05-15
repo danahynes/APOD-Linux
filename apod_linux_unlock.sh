@@ -24,7 +24,7 @@ gdbus monitor --system --dest org.freedesktop.login1 |
       echo "Unlock" >> "${HOME}/.apod_linux/apod_linux.log"
 
       # do the thing now (at unlock)
-      # N.B. we fork it so this loop doesn't get stuck waiting for the
+      # NB: we fork it so this loop doesn't get stuck waiting for the
       # sleep in the python script - on the off chance we get two unlock
       # events within the sleep time (sleeping doesn't stop the script -
       # only a logout or reboot will stop it)

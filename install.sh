@@ -7,7 +7,7 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# TODO: Every time we open Atom, it starts a login. WTF? Must be related to terminal plugin
+# XXX: Every time we open Atom, it starts a login
 # TODO: finish APOD_Linux.jpg in drive (caption stuff)
 
 # make sure we are installing as user (not root or sudo)
@@ -19,7 +19,7 @@ then
 fi
 
 # show some progress
-# N.B. first call with sudo to ask for password on its own line (aesthetics)
+# NB: first call with sudo to ask for password on its own line (aesthetics)
 sudo echo "Installing APOD_Linux..."
 echo "For license info see the LICENSE.txt file in this directory"
 

@@ -11,7 +11,7 @@
 # get the stuff from the conf file
 #-------------------------------------------------------------------------------
 
-# N.B. i know this is a big ugly command but it just strips leading and trailing
+# NB: i know this is a big ugly command but it just strips leading and trailing
 # whitespace and whitespace around the equals sign in case of a typo
 # generally speaking, the conf file should pass muster as a bash script so keys
 # and values should have no spaces...
@@ -42,7 +42,7 @@ APOD_CAPT_COLOR="${COLOR:=white}"
 APOD_CAPT_BACKGROUND="${BACKGROUND:=rgba(0,0,0,0.75)}"
 
 # position/size variables
-# N.B. all values relative to screen size. these values look good on me,
+# NB: all values relative to screen size. these values look good on me,
 # 1920x1080. YMMV
 APOD_CAPT_WIDTH="${WIDTH:=500}"                   # width of caption
 APOD_CAPT_FONT_SIZE="${FONT_SIZE:=15}"            # font size
@@ -53,14 +53,16 @@ APOD_CAPT_BOTTOM_PADDING="${BOTTOM_PADDING:=10}"  # don't let caption touch bott
 APOD_CAPT_SIDE_PADDING="${SIDE_PADDING:=10}"      # don't let caption touch sides of screen
 
 # temp file names
-# TODO: split off file ext from original file
+APOD_ORIGINAL_EXT=$(echo "${APOD_ORIGINAL_FILE}" | awk -F '.' '{print $2}')
 APOD_TEXT_IMG="${HOME}/.apod_linux/text.png"
 APOD_BACK_IMG="${HOME}/.apod_linux/back.png"
 APOD_TEXT2_IMG="${HOME}/.apod_linux/text2.png"
 APOD_MASK_IMG="${HOME}/.apod_linux/mask.png"
 APOD_CAPT_IMG="${HOME}/.apod_linux/capt.png"
-APOD_RESIZED_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_resized.jpg"
-APOD_TEMP_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_tmp.jpg"
+APOD_RESIZED_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_resized.\
+  ${APOD_ORIGINAL_EXT}"
+APOD_TEMP_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_tmp.\
+  ${APOD_ORIGINAL_EXT}"
 APOD_LOG_FILE="${HOME}/.apod_linux/apod_linux.log"
 
 #-------------------------------------------------------------------------------
@@ -72,7 +74,7 @@ ORIGINAL_W=$(identify -format "%[fx:w]" "${APOD_ORIGINAL_FILE}")
 ORIGINAL_H=$(identify -format "%[fx:h]" "${APOD_ORIGINAL_FILE}")
 
 # get screen resolution
-# N.B. must use single quotes for awk!
+# NB: must use single quotes for awk!
 SCREEN_W=$(xrandr --current | grep "*" | uniq | awk '{print $1}' | cut -d "x" \
     -f1)
 SCREEN_H=$(xrandr --current | grep "*" | uniq | awk '{print $1}' | cut -d "x" \

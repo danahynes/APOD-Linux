@@ -8,7 +8,7 @@
 #------------------------------------------------------------------------------#
 
 # show some progress
-# N.B. first call with sudo to ask for password on its own line (aesthetics)
+# NB: first call with sudo to ask for password on its own line (aesthetics)
 sudo echo "Uninstalling APOD_Linux..."
 
 # stop the unlock listener

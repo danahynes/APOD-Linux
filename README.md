@@ -129,7 +129,7 @@ Here is a flowchart of what the various scripts do:
 
 ![](APOD_Linux.jpg)
 
-TODO
+TODO:
 
 1. Set wallpaper on non-elementaryOS desktops
 
