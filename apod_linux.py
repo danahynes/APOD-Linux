@@ -95,8 +95,8 @@ else:
     logging.debug('Not an image, doing nothing')
     sys.exit(0)
 
-    # shutil.copy("/home/dana/Downloads/ZodiacalNight.jpg", "/home/dana/.apod_linux/apod_linux_wallpaper.jpg")
-    # pic_path = "/home/dana/.apod_linux/apod_linux_wallpaper.jpg"
+    # NB: this is for testing on days when the APOD is not an image
+    # pic_path = os.path.join(home_dir, 'Downloads/ZodiacalNight.jpg')
     # apod_data = {'explanation':'This is some fake text because there is no picture today'}
 
 #-------------------------------------------------------------------------------
