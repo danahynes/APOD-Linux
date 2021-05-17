@@ -17,7 +17,7 @@ echo "Login" >> "${HOME}/.apod_linux/apod_linux.log"
 python3 /usr/bin/apod_linux.py & disown
 
 # start listening for unlock (fork and disown to allow the login shell to exit)
-# NB: at this point any previous script(s) should be stopped,
+# NB: at this point any previous script(s) should be stopped
 /usr/bin/apod_linux_unlock.sh & disown
 
 # -)
