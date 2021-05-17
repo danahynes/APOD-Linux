@@ -65,4 +65,7 @@ echo -n "Running APOD_Linux now... "
 /etc/profile.d/apod_linux_login.sh & disown
 echo "Done"
 
+# show that we are done
+echo "APOD_Linux installed"
+
 # -)
