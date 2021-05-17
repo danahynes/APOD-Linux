@@ -50,7 +50,7 @@ You can safely use sudo here, but it's not necessary.
 Or you can remove the files manually:
 ```bash
 foo@bar:~$ pkill -f "/usr/bin/apod_linux_unlock.sh"
-foo@bar:~$ sudo rm -rf "${HOME}/.apod_linux"
+foo@bar:~$ sudo rm -rf "~/.apod_linux"
 foo@bar:~$ sudo rm -f "/etc/profile.d/apod_linux_login.sh"
 foo@bar:~$ sudo rm -f "/usr/bin/apod_linux_unlock.sh"
 foo@bar:~$ sudo rm -f "/usr/bin/apod_linux.py"
@@ -60,7 +60,7 @@ foo@bar:~$ sudo rm -f "/usr/bin/apod_linux_caption.sh"
 # Update
 
 The image can now have a caption based on the
-*/home/USER/.apod_linux/apod_linux.conf* file.
+*~/.apod_linux/apod_linux.conf* file.
 If the file contains the line *CAPTION=1*, a caption will be applied to the
 wallpaper. The file may also contain the line *POSITION=XX* with XX equaling
 values including "TR" (top right), "BR" (bottom right), "TL" (top left), or "BL"
@@ -68,7 +68,7 @@ values including "TR" (top right), "BR" (bottom right), "TL" (top left), or "BL"
 background, width of the caption, font size, border size, corner rounding, etc.
 
 The default is to put the caption in the bottom right, with white text on a
-black background with 25% opacity.
+black background with 75% opacity.
 
 Lines can be commented out using a hash mark (#) at the beginning of the line.
 White space is allowed at the beginning and end of a line, and around the equals
