@@ -7,9 +7,6 @@
 # License : WTFPLv2                                              \          /  #
 #------------------------------------------------------------------------------#
 
-# XXX: Every time we open Atom, it starts a login
-# TODO: finish APOD_Linux.jpg in drive (caption stuff)
-
 # make sure we are installing as user (not root or sudo)
 USER=$(whoami)
 if [ "${USER}" == "root" ]
