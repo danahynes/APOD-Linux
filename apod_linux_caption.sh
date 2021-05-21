@@ -53,7 +53,7 @@ APOD_CAPT_BOTTOM_PADDING="${BOTTOM_PADDING:=10}"  # don't let caption touch bott
 APOD_CAPT_SIDE_PADDING="${SIDE_PADDING:=10}"      # don't let caption touch sides of screen
 
 # temp file names
-APOD_ORIGINAL_EXT=$(echo "${APOD_ORIGINAL_FILE}" | awk -F '.' '{print $2}')
+APOD_ORIGINAL_EXT=$(echo "${APOD_ORIGINAL_FILE}" | awk -F '.' '{print $NF}')
 APOD_TEXT_IMG="${HOME}/.apod_linux/text.png"
 APOD_BACK_IMG="${HOME}/.apod_linux/back.png"
 APOD_TEXT2_IMG="${HOME}/.apod_linux/text2.png"
