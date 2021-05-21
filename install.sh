@@ -34,7 +34,7 @@ mkdir -p "${INSTALL_DIR}"
 echo "Done"
 
 # install the conf file (as user)
-echo -n "Copying config file for caption... "
+echo -n "Copying config file... "
 cp ./apod_linux.conf "${INSTALL_DIR}"
 echo "Done"
 
