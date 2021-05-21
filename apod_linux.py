@@ -41,10 +41,31 @@ logging.basicConfig(filename = log_name, level = logging.DEBUG,
 logging.debug('---------------------------------------------------------------')
 logging.debug('Starting script')
 
+# default delay
+delay = 30
+
+# look for conf file
+try:
+    conf_name = os.path.join(pic_dir, 'apod_linux.conf')
+    with open(conf_name, 'r') as f:
+        lines = f.readlines()
+
+        # try to find a delay in the conf file
+        for line in lines:
+            line_a = line.strip()
+            if not line_a.startswith('#'):
+                if 'DELAY' in line.upper():
+                    stuff = line.split('=')
+                    val = stuff[1].strip()
+                    delay = int(val)
+except Exception as e:
+    logging.debug(str(e))
+
+
 # wait for internet to come up
 # NB: the scripts apod_linux_login.sh and apod_linux_unlock.sh fork this
 # script, so a sleep here does not hang the login/unlock process
-time.sleep(30)
+time.sleep(delay)
 
 #-------------------------------------------------------------------------------
 # Get JSON from apod.nasa.gov
@@ -97,7 +118,7 @@ else:
 
     # NB: this is for testing on days when the APOD is not an image
     # pic_path = os.path.join(home_dir, 'Downloads/ZodiacalNight.jpg')
-    # apod_data = {'explanation':'This is some fake text because there is no picture today'}
+    # apod_data = {'explanation':'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
 #-------------------------------------------------------------------------------
 # Run caption script
@@ -134,6 +155,10 @@ if pic_path != None:
         # call the script with pic path
         subprocess.call([cmd, pic_path])
 
+        # remove file since its been copied everywhere
+        # NB: this is kept with eOS specific code since we know that's how
+        # set-wallpaper works. other os's may need to keep the file in place
+        os.remove(pic_path)
     except OSError as e:
         logging.debug(str(e))
         sys.exit(1)
@@ -141,12 +166,5 @@ if pic_path != None:
 #-------------------------------------------------------------------------------
 # DONE
 #-------------------------------------------------------------------------------
-
-try:
-
-    # remove file since its been copied everywhere
-    os.remove(pic_path)
-except OSError as e:
-    logging.debug(str(e))
 
 # -)
