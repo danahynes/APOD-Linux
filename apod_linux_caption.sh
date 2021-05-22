@@ -53,16 +53,14 @@ APOD_CAPT_BOTTOM_PADDING="${BOTTOM_PADDING:=10}"  # don't let caption touch bott
 APOD_CAPT_SIDE_PADDING="${SIDE_PADDING:=10}"      # don't let caption touch sides of screen
 
 # temp file names
-APOD_ORIGINAL_EXT=$(echo "${APOD_ORIGINAL_FILE}" | awk -F '.' '{print $NF}')
+APOD_EXT=$(echo "${APOD_ORIGINAL_FILE}" | awk -F '.' '{print $NF}')
 APOD_TEXT_IMG="${HOME}/.apod_linux/text.png"
 APOD_BACK_IMG="${HOME}/.apod_linux/back.png"
 APOD_TEXT2_IMG="${HOME}/.apod_linux/text2.png"
 APOD_MASK_IMG="${HOME}/.apod_linux/mask.png"
 APOD_CAPT_IMG="${HOME}/.apod_linux/capt.png"
-APOD_RESIZED_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_resized.\
-  ${APOD_ORIGINAL_EXT}"
-APOD_TEMP_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_tmp.\
-  ${APOD_ORIGINAL_EXT}"
+APOD_RESIZED_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_resized.${APOD_EXT}"
+APOD_TEMP_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_tmp.${APOD_EXT}"
 APOD_LOG_FILE="${HOME}/.apod_linux/apod_linux.log"
 
 #-------------------------------------------------------------------------------
