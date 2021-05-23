@@ -43,6 +43,7 @@ logging.debug('Starting script')
 
 # default delay
 delay = 30
+key_val = []
 
 # look for conf file
 try:
@@ -52,11 +53,11 @@ try:
 
         # try to find a delay in the conf file
         for line in lines:
-            line_a = line.strip()
-            if not line_a.startswith('#'):
-                if 'DELAY' in line.upper():
-                    stuff = line.split('=')
-                    val = stuff[1].strip()
+            line_strip = line.strip()
+            if not line_strip.startswith('#'):
+                if 'DELAY' in line_strip.upper():
+                    key_val = line_strip.split('=')
+                    val = key_val[1].strip()
                     delay = int(val)
 except Exception as e:
     logging.debug(str(e))
