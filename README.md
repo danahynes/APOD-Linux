@@ -12,7 +12,7 @@
 A small program that runs at every login/unlock to set your wallpaper to
 NASA's Astronomy Picture of the Day.
 
-![](screenshot.png)
+![](screenshot.jpg)
 
 # Installing
 
@@ -29,7 +29,7 @@ foo@bar:~/Downloads/APOD_Linux$ ./install.sh
 ```
 You can also download the
 [latest release](http://github.com/danahynes/APOD_Linux/releases/latest), unzip
-it, and run the install.sh file from there.
+it, and run the *install.sh* file from there.
 
 **DO NOT USE SUDO TO INSTALL!**
 
@@ -41,7 +41,7 @@ be OK.
 
 # Uninstalling
 
-To uninstall, go to the apod directory and run:
+To uninstall, go to the *~/.apod_linux* directory and run:
 ```bash
 foo@bar:~/.apod_linux$ ./uninstall.sh
 ```
@@ -72,7 +72,7 @@ black background with 75% opacity.
 
 Lines can be commented out using a hash mark (#) at the beginning of the line.
 White space is allowed at the beginning and end of a line, and around the equals
-sign. See the */home/USER/.apod_linux/apod_linux.conf* file for more info.
+sign. See the *~/.apod_linux/apod_linux.conf* file for more info.
 
 
 # Notes
@@ -94,7 +94,7 @@ The script does try to fall back to the last working picture if any of the above
 happen, however if it can't, it won't change your wallpaper so your system
 settings should still apply.
 
-You can check the log at */home/USER/.apod_linux/apod_linux.log* to find out if
+You can check the log at *~/.apod_linux/apod_linux.log* to find out if
 the script is working, and what it's doing.
 
 If you're like me, and use a laptop, you probably don't log in/out very often,
