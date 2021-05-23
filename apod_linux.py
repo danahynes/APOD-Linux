@@ -62,7 +62,6 @@ try:
 except Exception as e:
     logging.debug(str(e))
 
-
 # wait for internet to come up
 # NB: the scripts apod_linux_login.sh and apod_linux_unlock.sh fork this
 # script, so a sleep here does not hang the login/unlock process
