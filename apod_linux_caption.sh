@@ -18,10 +18,10 @@
 source <(grep = "${HOME}/.apod_linux/apod_linux.conf" | \
     sed 's/^[ \t]*//g' | sed 's/[ \t]*=[ \t]*/=/g' | sed 's/$[ \t]*//g')
 
-APOD_CAPT_CAPTION="${CAPTION:=0}"
+APOD_WANT_CAPTION="${CAPTION:=0}"
 
 # do we even want a caption?
-if [ "${APOD_CAPT_CAPTION}" == "0" ]
+if [ "${APOD_WANT_CAPTION}" == "0" ]
 then
 
   # if no caption, everything else is tits on a bull
@@ -56,11 +56,11 @@ APOD_CAPT_SIDE_PADDING="${SIDE_PADDING:=10}"      # don't let caption touch side
 APOD_EXT=$(echo "${APOD_ORIGINAL_FILE}" | awk -F '.' '{print $NF}')
 APOD_TEXT_IMG="${HOME}/.apod_linux/text.png"
 APOD_BACK_IMG="${HOME}/.apod_linux/back.png"
-APOD_TEXT2_IMG="${HOME}/.apod_linux/text2.png"
+APOD_COMB_IMG="${HOME}/.apod_linux/comb.png"
 APOD_MASK_IMG="${HOME}/.apod_linux/mask.png"
 APOD_CAPT_IMG="${HOME}/.apod_linux/capt.png"
-APOD_RESIZED_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_resized.${APOD_EXT}"
-APOD_TEMP_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_tmp.${APOD_EXT}"
+APOD_RESZ_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_resz.${APOD_EXT}"
+APOD_TEMP_IMG="${HOME}/.apod_linux/apod_linux_wallpaper_temp.${APOD_EXT}"
 APOD_LOG_FILE="${HOME}/.apod_linux/apod_linux.log"
 
 #-------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ convert \
   -resize "${SCALED_W}"x"${SCALED_H}" \
   -extent "${SCALED_W}"x"${SCALED_H}" \
   -gravity center \
-  "${APOD_RESIZED_IMG}" \
+  "${APOD_RESZ_IMG}" \
   >> "${APOD_LOG_FILE}" 2>&1
 
 #-------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ composite \
   -gravity center \
   "${APOD_TEXT_IMG}" \
   "${APOD_BACK_IMG}" \
-  "${APOD_TEXT2_IMG}" \
+  "${APOD_COMB_IMG}" \
   >> "${APOD_LOG_FILE}" 2>&1
 
 # create a round rect mask same size as text image
@@ -160,7 +160,7 @@ convert \
 
 # merge background image and round rect mask
 convert \
-  "${APOD_TEXT2_IMG}" \
+  "${APOD_COMB_IMG}" \
   -matte "${APOD_MASK_IMG}" \
   -compose DstIn \
   -composite "${APOD_CAPT_IMG}" \
@@ -196,7 +196,7 @@ fi
 
 # merge wallpaper and caption images
 convert \
-  "${APOD_RESIZED_IMG}" \
+  "${APOD_RESZ_IMG}" \
   "${APOD_CAPT_IMG}" \
   -geometry +"${X_OFF}"+"${Y_OFF}" \
   -compose over \
@@ -206,10 +206,10 @@ convert \
 # move new captioned image to wallpaper, and delete temp files
 rm -f "${APOD_TEXT_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 rm -f "${APOD_BACK_IMG}" >> "${APOD_LOG_FILE}" 2>&1
-rm -f "${APOD_TEXT2_IMG}" >> "${APOD_LOG_FILE}" 2>&1
+rm -f "${APOD_COMB_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 rm -f "${APOD_MASK_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 rm -f "${APOD_CAPT_IMG}" >> "${APOD_LOG_FILE}" 2>&1
-rm -f "${APOD_RESIZED_IMG}" >> "${APOD_LOG_FILE}" 2>&1
+rm -f "${APOD_RESZ_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 mv -f "${APOD_TEMP_IMG}" "${APOD_ORIGINAL_FILE}" \
     >> "${APOD_LOG_FILE}" 2>&1
 
