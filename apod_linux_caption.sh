@@ -124,13 +124,13 @@ TEXT_W=$(identify -format "%[fx:w]" "${APOD_TEXT_IMG}")
 TEXT_H=$(identify -format "%[fx:h]" "${APOD_TEXT_IMG}")
 
 # make new image that is x+y bigger than text image (add border)
-TEXT_W2=$(echo "scale=2;${TEXT_W}+${APOD_CAPT_BORDER}+${APOD_CAPT_BORDER}" | bc)
-TEXT_H2=$(echo "scale=2;${TEXT_H}+${APOD_CAPT_BORDER}+${APOD_CAPT_BORDER}" | bc)
+TEXT_WR=$(echo "scale=2;${TEXT_W}+${APOD_CAPT_BORDER}+${APOD_CAPT_BORDER}" | bc)
+TEXT_HR=$(echo "scale=2;${TEXT_H}+${APOD_CAPT_BORDER}+${APOD_CAPT_BORDER}" | bc)
 
 # create a background for the text
 convert \
-  -size "${TEXT_W2}"x"${TEXT_H2}" \
-  -extent "${TEXT_W2}"x"${TEXT_H2}" \
+  -size "${TEXT_WR}"x"${TEXT_HR}" \
+  -extent "${TEXT_WR}"x"${TEXT_HR}" \
   xc:"${APOD_CAPT_BACKGROUND}" \
   "${APOD_BACK_IMG}" \
   >> "${APOD_LOG_FILE}" 2>&1
@@ -145,14 +145,14 @@ composite \
 
 # create a round rect mask same size as text image
 convert \
-  -size "${TEXT_W2}"x"${TEXT_H2}" \
+  -size "${TEXT_WR}"x"${TEXT_HR}" \
   xc:none \
   -draw \
   "roundrectangle \
   0, \
   0, \
-  ${TEXT_W2}, \
-  ${TEXT_H2}, \
+  ${TEXT_WR}, \
+  ${TEXT_HR}, \
   ${APOD_CAPT_CORNER_RADIUS}, \
   ${APOD_CAPT_CORNER_RADIUS}" \
   "${APOD_MASK_IMG}" \
@@ -177,20 +177,20 @@ then
   Y_OFF=$(echo "scale=0;${Y_OVER}+${APOD_CAPT_TOP_PADDING}" | bc)
 elif [ "${APOD_CAPT_POSITION}" == "TR" ]
 then
-  X_OFF=$(echo "scale=0;(${SCALED_W}-${X_OVER}-${TEXT_W2}-\
+  X_OFF=$(echo "scale=0;(${SCALED_W}-${X_OVER}-${TEXT_WR}-\
       ${APOD_CAPT_SIDE_PADDING})" | bc)
   Y_OFF=$(echo "scale=0;${Y_OVER}+\
       ${APOD_CAPT_TOP_PADDING}" | bc)
 elif [ "${APOD_CAPT_POSITION}" == "BL" ]
 then
   X_OFF=$(echo "scale=0;${X_OVER}+${APOD_CAPT_SIDE_PADDING}" | bc)
-  Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_H2}-\
+  Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_HR}-\
       ${APOD_CAPT_BOTTOM_PADDING})" | bc)
 elif [ "${APOD_CAPT_POSITION}" == "BR" ]
 then
-  X_OFF=$(echo "scale=0;(${SCALED_W}-${X_OVER}-${TEXT_W2}-\
+  X_OFF=$(echo "scale=0;(${SCALED_W}-${X_OVER}-${TEXT_WR}-\
       ${APOD_CAPT_SIDE_PADDING})" | bc)
-  Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_H2}-\
+  Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_HR}-\
       ${APOD_CAPT_BOTTOM_PADDING})" | bc)
 fi
 
