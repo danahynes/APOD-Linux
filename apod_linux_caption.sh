@@ -52,7 +52,7 @@ APOD_CAPT_TOP_PADDING="${TOP_PADDING:=50}"        # account for top bar in eleme
 APOD_CAPT_BOTTOM_PADDING="${BOTTOM_PADDING:=10}"  # don't let caption touch bottom of screen
 APOD_CAPT_SIDE_PADDING="${SIDE_PADDING:=10}"      # don't let caption touch sides of screen
 
-# ext is the last field after the last dot
+# ext is the last field after the last dot (single quotes for awk)
 APOD_EXT=$(echo "${APOD_ORIGINAL_FILE}" | awk -F '.' '{print $NF}')
 
 # temp file names
