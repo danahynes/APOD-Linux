@@ -149,6 +149,12 @@ if pic_path != None:
 if pic_path != None:
     try:
 
+        # first check for env varible
+        dir = os.getenv('XDG_GREETER_DATA_DIR')
+        if dir == None:
+            logging.debug('No greeter dir, bailing')
+            sys.exit(1)
+
         # get location of script
         cmd = '/usr/lib/x86_64-linux-gnu/io.elementary.contract.set-wallpaper'
 
