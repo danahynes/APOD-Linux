@@ -12,7 +12,7 @@
 #-------------------------------------------------------------------------------
 
 # NB: i know this is a big ugly command but it just strips leading and trailing
-# whitespace and whitespace around the equals sign in case of a typo
+# whitespace and whitespace around the equals sign in case of a typo.
 # generally speaking, the conf file should pass muster as a bash script so keys
 # and values should have no spaces...
 source <(grep = "${HOME}/.apod_linux/apod_linux.conf" | \
@@ -52,8 +52,10 @@ APOD_CAPT_TOP_PADDING="${TOP_PADDING:=50}"        # account for top bar in eleme
 APOD_CAPT_BOTTOM_PADDING="${BOTTOM_PADDING:=10}"  # don't let caption touch bottom of screen
 APOD_CAPT_SIDE_PADDING="${SIDE_PADDING:=10}"      # don't let caption touch sides of screen
 
-# temp file names
+# ext is the last field after the last dot
 APOD_EXT=$(echo "${APOD_ORIGINAL_FILE}" | awk -F '.' '{print $NF}')
+
+# temp file names
 APOD_TEXT_IMG="${HOME}/.apod_linux/text.png"
 APOD_BACK_IMG="${HOME}/.apod_linux/back.png"
 APOD_COMB_IMG="${HOME}/.apod_linux/comb.png"
@@ -124,13 +126,13 @@ TEXT_W=$(identify -format "%[fx:w]" "${APOD_TEXT_IMG}")
 TEXT_H=$(identify -format "%[fx:h]" "${APOD_TEXT_IMG}")
 
 # make new image that is x+y bigger than text image (add border)
-TEXT_WR=$(echo "scale=2;${TEXT_W}+${APOD_CAPT_BORDER}+${APOD_CAPT_BORDER}" | bc)
-TEXT_HR=$(echo "scale=2;${TEXT_H}+${APOD_CAPT_BORDER}+${APOD_CAPT_BORDER}" | bc)
+TEXT_WB=$(echo "scale=2;${TEXT_W}+${APOD_CAPT_BORDER}+${APOD_CAPT_BORDER}" | bc)
+TEXT_HB=$(echo "scale=2;${TEXT_H}+${APOD_CAPT_BORDER}+${APOD_CAPT_BORDER}" | bc)
 
 # create a background for the text
 convert \
-  -size "${TEXT_WR}"x"${TEXT_HR}" \
-  -extent "${TEXT_WR}"x"${TEXT_HR}" \
+  -size "${TEXT_WB}"x"${TEXT_HB}" \
+  -extent "${TEXT_WB}"x"${TEXT_HB}" \
   xc:"${APOD_CAPT_BACKGROUND}" \
   "${APOD_BACK_IMG}" \
   >> "${APOD_LOG_FILE}" 2>&1
@@ -145,14 +147,14 @@ composite \
 
 # create a round rect mask same size as text image
 convert \
-  -size "${TEXT_WR}"x"${TEXT_HR}" \
+  -size "${TEXT_WB}"x"${TEXT_HB}" \
   xc:none \
   -draw \
   "roundrectangle \
   0, \
   0, \
-  ${TEXT_WR}, \
-  ${TEXT_HR}, \
+  ${TEXT_WB}, \
+  ${TEXT_HB}, \
   ${APOD_CAPT_CORNER_RADIUS}, \
   ${APOD_CAPT_CORNER_RADIUS}" \
   "${APOD_MASK_IMG}" \
@@ -177,20 +179,20 @@ then
   Y_OFF=$(echo "scale=0;${Y_OVER}+${APOD_CAPT_TOP_PADDING}" | bc)
 elif [ "${APOD_CAPT_POSITION}" == "TR" ]
 then
-  X_OFF=$(echo "scale=0;(${SCALED_W}-${X_OVER}-${TEXT_WR}-\
+  X_OFF=$(echo "scale=0;(${SCALED_W}-${X_OVER}-${TEXT_WB}-\
       ${APOD_CAPT_SIDE_PADDING})" | bc)
   Y_OFF=$(echo "scale=0;${Y_OVER}+\
       ${APOD_CAPT_TOP_PADDING}" | bc)
 elif [ "${APOD_CAPT_POSITION}" == "BL" ]
 then
   X_OFF=$(echo "scale=0;${X_OVER}+${APOD_CAPT_SIDE_PADDING}" | bc)
-  Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_HR}-\
+  Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_HB}-\
       ${APOD_CAPT_BOTTOM_PADDING})" | bc)
 elif [ "${APOD_CAPT_POSITION}" == "BR" ]
 then
-  X_OFF=$(echo "scale=0;(${SCALED_W}-${X_OVER}-${TEXT_WR}-\
+  X_OFF=$(echo "scale=0;(${SCALED_W}-${X_OVER}-${TEXT_WB}-\
       ${APOD_CAPT_SIDE_PADDING})" | bc)
-  Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_HR}-\
+  Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_HB}-\
       ${APOD_CAPT_BOTTOM_PADDING})" | bc)
 fi
 
