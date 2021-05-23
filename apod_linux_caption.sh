@@ -194,6 +194,10 @@ then
       ${APOD_CAPT_SIDE_PADDING})" | bc)
   Y_OFF=$(echo "scale=0;(${SCALED_H}-${Y_OVER}-${TEXT_HB}-\
       ${APOD_CAPT_BOTTOM_PADDING})" | bc)
+elif [ "${APOD_CAPT_POSITION}" == "C" ]
+then
+  X_OFF=$(echo "scale=0;(${SCALED_W}/2)-(${TEXT_WB}/2)" | bc)
+  Y_OFF=$(echo "scale=0;(${SCALED_H}/2)-(${TEXT_HB}/2)" | bc)
 fi
 
 # merge wallpaper and caption images
