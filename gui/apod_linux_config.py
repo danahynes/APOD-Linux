@@ -253,6 +253,8 @@ def button_cancel_cmd():
 # callback for the Apply button
 def button_apply_cmd():
     save_config()
+
+    # only run once, no listener
     cmd = "python3 /usr/bin/apod_linux.py & disown"
     array = cmd.split()
 
