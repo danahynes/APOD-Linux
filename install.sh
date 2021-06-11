@@ -58,9 +58,10 @@ sudo cp "./apod_linux.py" "/usr/bin"
 echo "Done"
 
 # install ttk gui and themes
-echo -n "Installing GUI... "
+echo "Installing GUI"
+echo -n "Installing tk dependencies..."
 sudo apt install python3-tk
-sudo pip3 install ttkthemes
+sudo -H pip3 install ttkthemes
 sudo cp "./gui/apod_linux_icon.png" "/usr/share/icons/hicolor/128x128/apps"
 sudo cp "./gui/apod_linux_config.py" "/usr/bin"
 cp "./gui/apod_linux.desktop" "${HOME}/.local/share/applications"
