@@ -69,7 +69,7 @@ echo "Done"
 
 # run the script now (as user) (fork and release as child)
 echo -n "Running APOD_Linux now... "
-python3 /usr/bin/apod_linux.py & disown
+/usr/bin/apod_linux_login.sh
 echo "Done"
 
 # show that we are done
