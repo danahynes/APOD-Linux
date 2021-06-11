@@ -27,5 +27,6 @@ DONE - uninstall.sh
 # TODO: make pages for text color/bg color/other
 #       ot back to R/G/B/A spins
 #       wider not taller
+# TODO: project/github folders (like a folder just for gui stuff)
 # TODO: localize labels/buttons
 # TODO: localize apod_linux.desktop
