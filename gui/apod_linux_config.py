@@ -243,15 +243,8 @@ def checkbox_cmd():
 
 # callback for the OK button
 def button_ok_cmd():
-    save_config()
-    main_window.destroy()
 
-# callback for the Cancel button
-def button_cancel_cmd():
-    main_window.destroy()
-
-# callback for the Apply button
-def button_apply_cmd():
+    # save options
     save_config()
 
     # only run once, no listener
@@ -261,6 +254,30 @@ def button_apply_cmd():
     # non-blocking subprocess
     subprocess.Popen(array)
 
+    # close window
+    main_window.destroy()
+
+# callback for the Cancel button
+def button_cancel_cmd():
+
+    # close window
+    main_window.destroy()
+
+# callback for the Apply button
+def button_apply_cmd():
+
+    # save options
+    save_config()
+
+    # only run once, no listener
+    cmd = "python3 /usr/bin/apod_linux.py & disown"
+    array = cmd.split()
+
+    # non-blocking subprocess
+    subprocess.Popen(array)
+
+    # NB: don't close window
+    
 # create the main window (titlebar and frame)
 # https://ttkthemes.readthedocs.io/en/latest/themes.html
 main_window = ThemedTk(theme="aquativo")
