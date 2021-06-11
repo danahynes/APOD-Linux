@@ -1,0 +1,31 @@
+shebang
+header
+wrap at 80
+footer
+
+comments
+unneeded code
+
+DONE - apod_linux_caption.sh
+DONE - apod_linux_config_orig.py
+DONE - apod_linux_config.py
+DONE - apod_linux_login.sh
+DONE - apod_linux.conf
+DONE - apod_linux_unlock.sh
+DONE - apod_linux.desktop
+DONE - apod_linux.py
+DONE - install.sh
+DONE - uninstall.sh
+
+# DONE: icon (works in dock, but not overview, AND MUST BE SQUARE)
+# DONE: desktop file (put in ~/.local/share/applications for current user
+#       or /usr/share/applications for all [ALL DOES NOT WORK])
+# DONE: blocks on call to apod_linux when clicking "apply"
+
+# TODO: run apod_linux_login.py at startup
+# TODO: why do we need full path to icon in .desktop?
+# TODO: make pages for text color/bg color/other
+#       ot back to R/G/B/A spins
+#       wider not taller
+# TODO: localize labels/buttons
+# TODO: localize apod_linux.desktop
