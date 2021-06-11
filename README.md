@@ -127,7 +127,7 @@ send a pull request or a DM and I'll look into it.
 
 Here is a flowchart of what the various scripts do:
 
-![](APOD_Linux.jpg)
+![](apod_linux_flow.jpg)
 
 TODO:
 
