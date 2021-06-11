@@ -23,6 +23,7 @@ DONE - uninstall.sh
 # DONE: blocks on call to apod_linux when clicking "apply"
 
 # TODO: run apod_linux_login.py at startup
+# TODO: add theme option to conf file and set theme at startup
 # TODO: why do we need full path to icon in .desktop?
 # TODO: make pages for text color/bg color/other
 #       ot back to R/G/B/A spins
