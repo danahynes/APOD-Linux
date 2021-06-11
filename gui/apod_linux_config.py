@@ -277,10 +277,10 @@ def button_apply_cmd():
     subprocess.Popen(array)
 
     # NB: don't close window
-    
+
 # create the main window (titlebar and frame)
 # https://ttkthemes.readthedocs.io/en/latest/themes.html
-main_window = ThemedTk(theme="aquativo")
+main_window = ThemedTk(theme="equilux")
 main_window.title("APOD_Linux config")
 main_window.columnconfigure(0, weight=1)
 main_window.rowconfigure(0, weight=1)
