@@ -61,9 +61,9 @@ echo "Done"
 echo -n "Installing GUI... "
 sudo apt install python3-tk
 sudo pip3 install ttkthemes
-sudo cp "./apod_linux_icon.png" "/usr/share/icons/hicolor/128x128/apps"
-sudo cp "./apod_linux_config.py" "/usr/bin"
-cp "./apod_linux.desktop" "${HOME}/.local/share/applications"
+sudo cp "./gui/apod_linux_icon.png" "/usr/share/icons/hicolor/128x128/apps"
+sudo cp "./gui/apod_linux_config.py" "/usr/bin"
+cp "./gui/apod_linux.desktop" "${HOME}/.local/share/applications"
 echo "Done"
 
 # run the script now (as user) (fork and release as child)
