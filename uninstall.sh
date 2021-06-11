@@ -17,12 +17,22 @@ sudo pkill -f "/usr/bin/apod_linux_unlock.sh"
 echo "Done"
 
 # delete dirs/files from locations
-echo -n "Deleting all data and scripts... "
+echo -n "Deleting install directory... "
 sudo rm -rf "${HOME}/.apod_linux"
-sudo rm -f "/etc/profile.d/apod_linux_login.sh"
+echo "Done"
+
+echo -n "Deleting scripts from their locations..."
+sudo rm -f "/usr/bin/apod_linux_caption.sh"
+sudo rm -f "/usr/bin/apod_linux_login.sh"
 sudo rm -f "/usr/bin/apod_linux_unlock.sh"
 sudo rm -f "/usr/bin/apod_linux.py"
-sudo rm -f "/usr/bin/apod_linux_caption.sh"
+echo "Done"
+
+# delete icon
+echo -n "Deleting GUI... "
+sudo rm -f "/usr/share/icons/hicolor/128x128/apps/apod_linux_icon.png"
+sudo rm -f "/usr/bin/apod_linux_config.py"
+sudo rm -f "${HOME}/.local/share/applications/apod_linux.desktop"
 echo "Done"
 
 # show that we are done
