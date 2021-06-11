@@ -35,12 +35,12 @@ echo "Done"
 
 # install the conf file (as user)
 echo -n "Copying config file... "
-cp ./apod_linux.conf "${INSTALL_DIR}"
+cp "./apod_linux.conf" "${INSTALL_DIR}"
 echo "Done"
 
 # install the uninstaller
 echo -n "Copying uninstaller... "
-cp ./uninstall.sh "${INSTALL_DIR}"
+cp "./uninstall.sh" "${INSTALL_DIR}"
 echo "Done"
 
 # make a log file now in case anyone needs it before the py script runs (the py
@@ -51,15 +51,24 @@ echo "Done"
 
 # copy the scripts to their locations (needs admin hence sudo)
 echo -n "Copying scripts to their locations... "
-sudo cp "./apod_linux_login.sh" "/etc/profile.d"
+sudo cp "./apod_linux_caption.sh" "/usr/bin"
+sudo cp "./apod_linux_login.sh" "/usr/bin"
 sudo cp "./apod_linux_unlock.sh" "/usr/bin"
 sudo cp "./apod_linux.py" "/usr/bin"
-sudo cp "./apod_linux_caption.sh" "/usr/bin"
+echo "Done"
+
+# install ttk gui and themes
+echo -n "Installing GUI... "
+sudo apt install python3-tk
+sudo pip3 install ttkthemes
+sudo cp "./apod_linux_icon.png" "/usr/share/icons/hicolor/128x128/apps"
+sudo cp "./apod_linux_config.py" "/usr/bin"
+cp "./apod_linux.desktop" "${HOME}/.local/share/applications"
 echo "Done"
 
 # run the script now (as user) (fork and release as child)
 echo -n "Running APOD_Linux now... "
-/etc/profile.d/apod_linux_login.sh & disown
+python3 /usr/bin/apod_linux.py & disown
 echo "Done"
 
 # show that we are done
