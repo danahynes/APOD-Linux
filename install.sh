@@ -52,9 +52,9 @@ echo "Done"
 # copy the scripts to their locations (needs admin hence sudo)
 echo -n "Copying scripts to their locations... "
 sudo cp "./apod_linux_caption.sh" "/usr/bin"
-sudo cp "./apod_linux_login.sh" "/usr/bin"
 sudo cp "./apod_linux_unlock.sh" "/usr/bin"
 sudo cp "./apod_linux.py" "/usr/bin"
+sudo cp "./apod_linux_login.sh" "/etc/profile.d"
 echo "Done"
 
 # install ttk gui and themes
