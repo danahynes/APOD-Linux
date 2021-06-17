@@ -23,15 +23,6 @@ INSTALL_DIR="${HOME}/.apod_linux"
 source <(grep = "${INSTALL_DIR}/apod_linux.conf" | \
     sed 's/^[ \t]*//g' | sed 's/[ \t]*=[ \t]*/=/g' | sed 's/$[ \t]*//g')
 
-# do we even want a caption?
-APOD_WANT_CAPTION="${CAPTION:=0}"
-if [ "${APOD_WANT_CAPTION}" == "0" ]
-then
-
-  # if no caption, everything else is tits on a bull
-  exit 0
-fi
-
 #-------------------------------------------------------------------------------
 # set up some variables/constants
 #-------------------------------------------------------------------------------
@@ -137,6 +128,7 @@ convert \
   -pointsize "${APOD_CAPT_FONT_SIZE}" \
   -fill "${APOD_CAPT_COLOR}" \
   -background none \
+  -gravity west \
   caption:"${APOD_CAPT_TEXT}" \
   "${APOD_TEXT_IMG}" \
   >> "${APOD_LOG_FILE}" 2>&1
@@ -230,14 +222,16 @@ convert \
   -composite "${APOD_TEMP_IMG}" \
   >> "${APOD_LOG_FILE}" 2>&1
 
-# move new captioned image to wallpaper, and delete temp files
+# move new captioned image to wallpaper
+mv -f "${APOD_TEMP_IMG}" "${APOD_ORIGINAL_FILE}" \
+    >> "${APOD_LOG_FILE}" 2>&1
+
+# delete temp files
 rm -f "${APOD_TEXT_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 rm -f "${APOD_BACK_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 rm -f "${APOD_COMB_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 rm -f "${APOD_MASK_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 rm -f "${APOD_CAPT_IMG}" >> "${APOD_LOG_FILE}" 2>&1
 rm -f "${APOD_RESZ_IMG}" >> "${APOD_LOG_FILE}" 2>&1
-mv -f "${APOD_TEMP_IMG}" "${APOD_ORIGINAL_FILE}" \
-    >> "${APOD_LOG_FILE}" 2>&1
 
 # -)
