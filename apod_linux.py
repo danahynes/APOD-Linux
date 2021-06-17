@@ -25,42 +25,79 @@ import urllib.request
 # NB: need pic_dir before setting up logging
 
 # get current user's home dir
-home_dir = os.path.expanduser('~')
+home_dir = os.path.expanduser("~")
 
 # the hidden dir to store the wallpaper and log file
-pic_dir = os.path.join(home_dir, '.apod_linux')
+pic_dir = os.path.join(home_dir, ".apod_linux")
 
 # get log file name`
-log_name = os.path.join(pic_dir, 'apod_linux.log')
+log_name = os.path.join(pic_dir, "apod_linux.log")
 
 # set up logging
 logging.basicConfig(filename = log_name, level = logging.DEBUG,
-        format = '%(asctime)s - %(message)s')
+        format = "%(asctime)s - %(message)s")
 
 # log start
-logging.debug('---------------------------------------------------------------')
-logging.debug('Starting script')
+logging.debug("---------------------------------------------------------------")
+logging.debug("Starting script")
 
-# default delay
+# defaults
+enabled = True
 delay = 30
-key_val = []
+caption = False
 
 # look for conf file
-try:
-    conf_name = os.path.join(pic_dir, 'apod_linux.conf')
-    with open(conf_name, 'r') as f:
-        lines = f.readlines()
 
-        # try to find a delay in the conf file
-        for line in lines:
-            line_strip = line.strip()
-            if not line_strip.startswith('#'):
-                if 'DELAY' in line_strip.upper():
-                    key_val = line_strip.split('=')
-                    val = key_val[1].strip()
+# NB: clean lines as such:
+# # this is a comment, ignored
+# FOO=BAR # split at equals, 0 is key, split val at #, 0 is val
+try:
+    conf_name = os.path.join(pic_dir, "apod_linux.conf")
+    if os.path.exists(conf_name):
+        with open(conf_name, "r") as f:
+            lines = f.readlines()
+
+            # read key/value pairs from conf file
+            for line in lines:
+                line_clean = line.strip().upper()
+
+                # ignore comment lines or blanks or lines with no values
+                if line_clean.startswith("#") or \
+                    line_clean == "" or \
+                    not "=" in line_clean:
+                        continue
+
+                # split key off at equals
+                key_val = line_clean.split("=")
+                key = key_val[0].strip()
+
+                # split val off ignoring trailing comments
+                val_array = key_val[1].split("#")
+                val = val_array[0].strip()
+
+                # check if we are enabled
+                if key == "ENABLED":
+                    if val == "":
+                        val = enabled
+                    enabled = int(val)
+
+                # get delay
+                if key == "DELAY":
+                    if val == "":
+                        val = delay
                     delay = int(val)
+
+                # get caption
+                if key == "CAPTION":
+                    if val == "":
+                        val = caption
+                    caption = int(val)
 except Exception as e:
     logging.debug(str(e))
+
+if not enabled:
+    logging.debug("Not enabled")
+    sys.exit(0)
 
 # wait for internet to come up
 # NB: the scripts apod_linux_login.sh and apod_linux_unlock.sh fork this
@@ -72,7 +109,7 @@ time.sleep(delay)
 #-------------------------------------------------------------------------------
 
 # the url to load JSON from
-apod_url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY'
+apod_url = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY"
 
 # get the JSON and format it
 try:
@@ -80,7 +117,7 @@ try:
     byte_data = response.read()
     apod_data = json.loads(byte_data)
 except urllib.error.URLError as e:
-    logging.debug('Could not get JSON, maybe no internet?')
+    logging.debug("Could not get JSON, maybe no internet?")
     sys.exit(1)
 
 #-------------------------------------------------------------------------------
@@ -91,29 +128,29 @@ except urllib.error.URLError as e:
 pic_path = None
 
 # make sure it's an image (sometimes it's a video)
-media_type = apod_data['media_type']
-if 'image' in media_type:
+media_type = apod_data["media_type"]
+if "image" in media_type:
     try:
 
         # get the url to the actual image
-        pic_url = apod_data['hdurl']
+        pic_url = apod_data["hdurl"]
 
         # create a download file path
-        file_ext = pic_url.split('.')[-1]
-        pic_name = 'apod_linux_wallpaper.' + file_ext
+        file_ext = pic_url.split(".")[-1]
+        pic_name = "apod_linux_wallpaper." + file_ext
         pic_path = os.path.join(pic_dir, pic_name)
 
         # download the full picture
         urllib.request.urlretrieve(pic_url, pic_path)
 
         # log result
-        logging.debug('Downloaded new file')
+        logging.debug("Downloaded new file")
     except urllib.error.URLError as e:
-        logging.debug('Could not get new file, maybe no internet?')
+        logging.debug("Could not get new file, maybe no internet?")
         sys.exit(1)
 
 else:
-    logging.debug('Not an image, doing nothing')
+    logging.debug("Not an image, doing nothing")
     sys.exit(0)
 
     # NB: this is for testing on days when the APOD is not an image
@@ -125,14 +162,14 @@ else:
 #-------------------------------------------------------------------------------
 
 # if we have a valid pic_path
-if pic_path != None:
+if pic_path != None and caption:
     try:
 
         # get location of caption script
-        cap_path = '/usr/bin/apod_linux_caption.sh'
+        cap_path = "/usr/bin/apod_linux_caption.sh"
 
         # get text to send
-        cap_text = apod_data['explanation']
+        cap_text = apod_data["explanation"]
 
         # call the caption script with text and pic path
         subprocess.call([cap_path, pic_path, cap_text])
@@ -150,13 +187,13 @@ if pic_path != None:
     try:
 
         # first check for env varible
-        dir = os.getenv('XDG_GREETER_DATA_DIR')
+        dir = os.getenv("XDG_GREETER_DATA_DIR")
         if dir == None:
-            logging.debug('No greeter dir, bailing')
+            logging.debug("No greeter dir, bailing")
             sys.exit(1)
 
         # get location of script
-        cmd = '/usr/lib/x86_64-linux-gnu/io.elementary.contract.set-wallpaper'
+        cmd = "/usr/lib/x86_64-linux-gnu/io.elementary.contract.set-wallpaper"
 
         # call the script with pic path
         subprocess.call([cmd, pic_path])
