@@ -10,6 +10,12 @@
 # stop the unlock listener (so we don't run it twice)
 pkill -f "/usr/bin/apod_linux_unlock.sh"
 
+# make sure we are running as installed user
+if [ ! -d "${HOME}/.apod_linux" ]
+then
+  exit 0
+fi
+
 # let the log know whats up
 echo "Login" >> "${HOME}/.apod_linux/apod_linux.log"
 
