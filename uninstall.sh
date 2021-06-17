@@ -23,9 +23,9 @@ echo "Done"
 
 echo -n "Deleting scripts from their locations..."
 sudo rm -f "/usr/bin/apod_linux_caption.sh"
-sudo rm -f "/usr/bin/apod_linux_login.sh"
 sudo rm -f "/usr/bin/apod_linux_unlock.sh"
 sudo rm -f "/usr/bin/apod_linux.py"
+sudo rm -f "/etc/profile.d/apod_linux_login.sh"
 echo "Done"
 
 # delete icon
