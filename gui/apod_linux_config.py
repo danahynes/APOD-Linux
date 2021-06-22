@@ -478,7 +478,7 @@ spin_bg_b.grid(column=1, row=8, sticky=(E, W), padx=5,pady=5)
 spin_bg_b.bind("<FocusOut>", focusout)
 
 label_bg_a = Label(tab_colors, text="Alpha (0-100):", anchor=E)
-label_bg_a.grid(column=0, row=9, sticky=(E, W), padx=5,pady=5)
+label_bg_a.grid(column=0, row=9, sticky=(E, W), padx=5,pady=(5, 20))
 
 spin_bg_a = Spinbox(tab_colors, from_=0, to=100, textvariable=var_bg_a,
     validate="all", validatecommand=validate_func, width=3)
@@ -548,7 +548,7 @@ spin_bottom_padding.grid(column=1, row=6, sticky=(E, W), padx=5, pady=5)
 spin_bottom_padding.bind("<FocusOut>", focusout)
 
 label_side_padding = Label(tab_other, text="Side padding (0-50):", anchor=E)
-label_side_padding.grid(column=0, row=7, sticky=(E, W), padx=5, pady=5)
+label_side_padding.grid(column=0, row=7, sticky=(E, W), padx=5, pady=(5, 20))
 
 spin_side_padding = Spinbox(tab_other, from_=0, to=50,
     textvariable=var_side_padding, validate="all",
