@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #------------------------------------------------------------------------------#
-# Filename: apod_linux_config.py                                 /          \  #
+# Filename: apod_linux_config_tk_2.py                            /          \  #
 # Project : APOD_Linux                                          |     ()     | #
 # Date    : 05/30/2021                                          |            | #
 # Author  : Dana Hynes                                          |   \____/   | #
