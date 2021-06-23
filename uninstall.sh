@@ -28,10 +28,10 @@ sudo rm -f "/usr/bin/apod_linux.py"
 sudo rm -f "/etc/profile.d/apod_linux_login.sh"
 echo "Done"
 
-# delete icon
+# delete gui
 echo -n "Deleting GUI... "
-sudo rm -f "/usr/share/icons/hicolor/128x128/apps/apod_linux_icon.png"
 sudo rm -f "/usr/bin/apod_linux_config.py"
+sudo rm -f "/usr/share/icons/hicolor/128x128/apps/apod_linux_icon.png"
 sudo rm -f "${HOME}/.local/share/applications/apod_linux.desktop"
 echo "Done"
 
