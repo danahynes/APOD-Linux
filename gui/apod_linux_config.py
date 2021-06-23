@@ -20,9 +20,9 @@ pic_dir = os.path.join(home_dir, ".apod_linux")
 conf_file = os.path.join(pic_dir, "apod_linux.conf")
 
 # set defaults for first tab
-def_enabled = 1
+def_enabled = True
 def_delay = 30
-def_use_caption = 1
+def_caption = True
 
 # set defaults for second tab
 def_text_r = 255
@@ -106,7 +106,7 @@ class MyWindow(Gtk.Window):
         self.set_border_width(10)
 
         # set new width and default (fit) height
-        self.set_default_size(400, -1)
+        self.set_default_size(-1, -1)
 
         # don't allow resizing of window
         self.set_resizable(False)
@@ -496,8 +496,8 @@ class MyWindow(Gtk.Window):
         button_apply.connect("clicked", self.button_apply_clicked)
         hbox_buttons.pack_start(button_apply, True, True, 0)
 
-        # create a box for the switcher and the stack and add it as main
-        # window's content
+        # create a vbox for the switcher box, stack, and button box and add it
+        # as main window's content
         vbox_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=50)
         self.add(vbox_content)
 
@@ -509,7 +509,12 @@ class MyWindow(Gtk.Window):
         vbox_content.pack_start(stack, True, True, 0)
         vbox_content.pack_start(hbox_buttons, False, False, 0)
 
+        # load props or defaults
         self.load_config()
+
+        # do checkbox routines
+        self.check_caption_clicked(self.check_caption)
+        self.check_enabled_clicked(self.check_enabled)
 
     # load values from config file
     def load_config(self):
@@ -517,7 +522,7 @@ class MyWindow(Gtk.Window):
         # set defaults
         self.check_enabled.set_active(int(def_enabled))
         self.spin_delay.set_value(int(def_delay))
-        self.check_caption.set_active(int(def_use_caption))
+        self.check_caption.set_active(int(def_caption))
 
         self.spin_text_r.set_value(int(def_text_r))
         self.spin_text_g.set_value(int(def_text_g))
@@ -573,22 +578,29 @@ class MyWindow(Gtk.Window):
                     if "CAPTION" in key:
                         self.check_caption.set_active(int(val))
 
-                    if "COLOR" in key:
-                        colors = val.split("(")[1].split(")")[0]
-                        color_vars = colors.split(",")
-                        self.spin_text_r.set_value(int(color_vars[0]))
-                        self.spin_text_g.set_value(int(color_vars[1]))
-                        self.spin_text_b.set_value(int(color_vars[2]))
-                        self.spin_text_a.set_value(
-                                int(float(color_vars[3]) * 100))
+                    if "TEXT_R" in key:
+                        self.spin_text_r.set_value(int(val))
 
-                    if "BACKGROUND" in key:
-                        bgs = val.split("(")[1].split(")")[0]
-                        bg_vars = bgs.split(",")
-                        self.spin_bg_r.set_value(int(bg_vars[0]))
-                        self.spin_bg_g.set_value(int(bg_vars[1]))
-                        self.spin_bg_b.set_value(int(bg_vars[2]))
-                        self.spin_bg_a.set_value(int(float(bg_vars[3]) * 100))
+                    if "TEXT_G" in key:
+                        self.spin_text_g.set_value(int(val))
+
+                    if "TEXT_B" in key:
+                        self.spin_text_b.set_value(int(val))
+
+                    if "TEXT_A" in key:
+                        self.spin_text_a.set_value(int(val))
+
+                    if "BG_R" in key:
+                        self.spin_bg_r.set_value(int(val))
+
+                    if "BG_G" in key:
+                        self.spin_bg_g.set_value(int(val))
+
+                    if "BG_B" in key:
+                        self.spin_bg_b.set_value(int(val))
+
+                    if "BG_A" in key:
+                        self.spin_bg_a.set_value(int(val))
 
                     if "POSITION" in key:
                         for short_pos, long_pos in position_map.items():
@@ -633,34 +645,20 @@ class MyWindow(Gtk.Window):
             f.write("CAPTION=" + str(int(self.check_caption.get_active())) +
                     "\n")
 
-            # set the color alpha to a percent
-            f.write(
-                "COLOR=" +
-                '\"rgba(' +
-                str(int(self.spin_text_r.get_value())) + "," +
-                str(int(self.spin_text_g.get_value())) + "," +
-                str(int(self.spin_text_b.get_value())) + "," +
-                str(float(self.spin_text_a.get_value()) / 100) +
-                ')\"\n'
-            )
-
-            # set the background alpha to a percent
-            f.write(
-                "BACKGROUND=" +
-                '\"rgba(' +
-                str(int(self.spin_bg_r.get_value())) + "," +
-                str(int(self.spin_bg_g.get_value())) + "," +
-                str(int(self.spin_bg_b.get_value())) + "," +
-                str(float(self.spin_bg_a.get_value()) / 100) +
-                ')\"\n'
-            )
+            f.write("TEXT_R=" + str(int(self.spin_text_r.get_value())) + "\n")
+            f.write("TEXT_G=" + str(int(self.spin_text_g.get_value())) + "\n")
+            f.write("TEXT_B=" + str(int(self.spin_text_b.get_value())) + "\n")
+            f.write("TEXT_A=" + str(int(self.spin_text_a.get_value())) + "\n")
+            f.write("BG_R=" + str(int(self.spin_bg_r.get_value())) + "\n")
+            f.write("BG_G=" + str(int(self.spin_bg_g.get_value())) + "\n")
+            f.write("BG_B=" + str(int(self.spin_bg_b.get_value())) + "\n")
+            f.write("BG_A=" + str(int(self.spin_bg_a.get_value())) + "\n")
 
             # fudge the position option from the array
             val = self.combo_position.get_active_text()
             for short_pos, long_pos in position_map.items():
                 if val == long_pos:
                     f.write("POSITION=" + short_pos + "\n")
-
             f.write("WIDTH=" + str(int(self.spin_width.get_value())) + "\n")
             f.write("FONT_SIZE=" + str(int(self.spin_font_size.get_value())) +
                     "\n")
