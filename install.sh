@@ -66,7 +66,7 @@ echo "Done"
 
 # run the script now (as user) (fork and release as child)
 echo -n "Running APOD_Linux now... "
-/usr/bin/apod_linux_login.sh
+/etc/profile.d/apod_linux_login.sh
 echo "Done"
 
 # show that we are done
