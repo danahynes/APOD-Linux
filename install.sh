@@ -57,7 +57,7 @@ sudo cp "./apod_linux.py" "/usr/bin"
 sudo cp "./apod_linux_login.sh" "/etc/profile.d"
 echo "Done"
 
-# install ttk gui and themes
+# install gui
 echo -n "Installing GUI... "
 sudo cp "./gui/apod_linux_config.py" "/usr/bin"
 sudo cp "./gui/apod_linux_icon.png" "/usr/share/icons/hicolor/128x128/apps"
