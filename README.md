@@ -74,6 +74,9 @@ Lines can be commented out using a hash mark (#) at the beginning of the line.
 White space is allowed at the beginning and end of a line, and around the equals
 sign. See the *~/.apod_linux/apod_linux.conf* file for more info.
 
+# Update #2
+There is now a GUI written in ~~tkinter~~ PyGTK to set the options for APOD_Linux. It will be installed into the Applications menu and can be accessed
+by the user that installed APOD_Linux.
 
 # Notes
 
