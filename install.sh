@@ -62,6 +62,7 @@ echo "Installing GUI "
 sudo cp "./gui/apod_linux_config.py" "/usr/bin"
 sudo cp "./gui/apod_linux_icon.png" "/usr/share/icons/hicolor/128x128/apps"
 cp "./gui/apod_linux.desktop" "${HOME}/.local/share/applications"
+sudo update-icon-caches /usr/share/icons/*
 echo "Done"
 
 # run the script now (as user) (fork and release as child)
