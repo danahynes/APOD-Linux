@@ -140,6 +140,7 @@ class MyWindow(Gtk.Window):
 
         # add a label
         label_delay = Gtk.Label(label=str_label_delay)
+        label_delay.set_alignment(1, 0)
         grid_general.attach(label_delay, 0, 1, 1, 1)
 
         # add a spinbox that grows horizontally
@@ -659,6 +660,7 @@ class MyWindow(Gtk.Window):
             for short_pos, long_pos in position_map.items():
                 if val == long_pos:
                     f.write("POSITION=" + short_pos + "\n")
+                    break
             f.write("WIDTH=" + str(int(self.spin_width.get_value())) + "\n")
             f.write("FONT_SIZE=" + str(int(self.spin_font_size.get_value())) +
                     "\n")
