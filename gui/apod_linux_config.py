@@ -47,31 +47,55 @@ def_side_pad = 10
 # default strings
 str_title = "APOD_Linux"
 
-str_check_enabled = "Enable " + str_title
+str_label_enabled = "Enable " + str_title + ":"
+str_tooltip_enabled = "Enables or disables the APOD_Linux program"
 str_label_delay = "Delay (0-60):"
-str_check_caption = "Use caption"
+str_tooltip_delay = "How long to wait (in seconds) for an internet connection \
+before downloading"
+str_label_caption = "Use caption:"
+str_tooltip_caption = "Enables or disables the caption on top of the wallpaper"
 str_tab_general = "General"
 
 str_label_text = "<b>Text</b>"
 str_label_text_r = "Red (0-255):"
+str_tooltip_text_r = "The red value for the caption text"
 str_label_text_g = "Green (0-255):"
+str_tooltip_text_g = "The green value for the caption text"
 str_label_text_b = "Blue (0-255):"
+str_tooltip_text_b = "The blue value for the caption text"
 str_label_text_a = "Alpha % (0-100):"
+str_tooltip_text_a = "The alpha (transparency) value for the caption text"
 str_label_bg = "<b>Background</b>"
 str_label_bg_r = "Red (0-255):"
+str_tooltip_bg_r = "The red value for the caption background"
 str_label_bg_g = "Green (0-255):"
+str_tooltip_bg_g = "The green value for the caption background"
 str_label_bg_b = "Blue (0-255):"
+str_tooltip_bg_b = "The blue value for the caption background"
 str_label_bg_a = "Alpha % (0-100):"
+str_tooltip_bg_a = "The alpha (transparency) value for the caption background"
 str_tab_colors = "Colors"
 
 str_label_position = "Position:"
+str_tooltip_position = "The position of the caption relative to the screen"
 str_label_width = "Width (0-1000):"
+str_tooltip_width = "The width of the caption bubble"
 str_label_font_size = "Font size (0-50):"
+str_tooltip_font_size = "The font size of the caption"
 str_label_corner = "Corner radius (0-50):"
+str_tooltip_corner = "The corner radius of the caption bubble"
 str_label_border = "Border (0-50):"
+str_tooltip_border = "The spacing between the caption text and the background \
+bubble"
 str_label_top_pad = "Top padding (0-100):"
+str_tooltip_top_pad = "The spacing between the caption and the top of the \
+screen"
 str_label_bottom_pad = "Bottom padding (0-100):"
+str_tooltip_bottom_pad = "The spacing between the caption and the bottom of \
+the screen"
 str_label_side_pad = "Side padding (0-100):"
+str_tooltip_side_pad = "The spacing between the caption and the sides of the \
+screen"
 str_tab_other = "Other"
 
 str_button_ok = "OK"
@@ -103,10 +127,10 @@ class MyWindow(Gtk.Window):
         Gtk.Window.__init__(self, title=str_title)
 
         # the padding between the window edge and the content
-        self.set_border_width(10)
+        self.set_border_width(20)
 
         # set new width and default (fit) height
-        self.set_default_size(-1, -1)
+        self.set_default_size(600, -1)
 
         # don't allow resizing of window
         self.set_resizable(False)
@@ -133,10 +157,20 @@ class MyWindow(Gtk.Window):
         grid_general.set_row_spacing(20)
         grid_general.set_column_spacing(20)
 
-        # add a checkbox
-        self.check_enabled = Gtk.CheckButton(label=str_check_enabled)
-        self.check_enabled.connect("clicked", self.check_enabled_clicked)
-        grid_general.attach(self.check_enabled, 1, 0, 1, 1)
+        # add a label and switch
+        label_enabled = Gtk.Label(label=str_label_enabled)
+        label_enabled.set_alignment(1, 0)
+        grid_general.attach(label_enabled, 0, 0, 1, 1)
+
+        self.switch_enabled = Gtk.Switch()
+        self.switch_enabled.connect("notify::active",
+                self.switch_enabled_clicked)
+        self.switch_enabled.set_tooltip_text(str_tooltip_enabled)
+
+        hbox_enabled = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+        hbox_enabled.pack_start(self.switch_enabled, False, False, 0)
+
+        grid_general.attach(hbox_enabled, 1, 0, 1, 1)
 
         # add a label
         label_delay = Gtk.Label(label=str_label_delay)
@@ -154,12 +188,23 @@ class MyWindow(Gtk.Window):
         )
         self.spin_delay = Gtk.SpinButton(adjustment=adj_delay, hexpand=True)
         self.spin_delay.set_numeric(True)
+        self.spin_delay.set_tooltip_text(str_tooltip_delay)
         grid_general.attach(self.spin_delay, 1, 1, 1, 1)
 
-        # add another checkbox
-        self.check_caption = Gtk.CheckButton(label=str_check_caption)
-        self.check_caption.connect("clicked", self.check_caption_clicked)
-        grid_general.attach(self.check_caption, 1, 2, 1, 1)
+        # add a label and switch
+        label_caption = Gtk.Label(label=str_label_caption)
+        label_caption.set_alignment(1, 0)
+        grid_general.attach(label_caption, 0, 2, 1, 1)
+
+        self.switch_caption = Gtk.Switch()
+        self.switch_caption.connect("notify::active",
+                self.switch_caption_clicked)
+        self.switch_caption.set_tooltip_text(str_tooltip_caption)
+
+        hbox_caption = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+        hbox_caption.pack_start(self.switch_caption, False, False, 0)
+
+        grid_general.attach(hbox_caption, 1, 2, 1, 1)
 
         # add the grid to the stack with a name and a title
         stack.add_titled(grid_general, "general", str_tab_general)
@@ -186,7 +231,7 @@ class MyWindow(Gtk.Window):
         # a box to contain label and separator box
         # label is F, F to make it as small as possible
         # box is T, T to make it as big as possible
-        hbox_text = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        hbox_text = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
         hbox_text.pack_start(label_text, False, False, 0)
         hbox_text.pack_start(vbox_sep_text, True, True, 0)
         grid_colors.attach(hbox_text, 0, 0, 2, 1)
@@ -206,6 +251,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_text_r = Gtk.SpinButton(adjustment=adj_text_r, hexpand=True)
         self.spin_text_r.set_numeric(True)
+        self.spin_text_r.set_tooltip_text(str_tooltip_text_r)
         grid_colors.attach(self.spin_text_r, 1, 1, 1, 1)
 
         label_text_g = Gtk.Label(label=str_label_text_g)
@@ -222,6 +268,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_text_g = Gtk.SpinButton(adjustment=adj_text_g, hexpand=True)
         self.spin_text_g.set_numeric(True)
+        self.spin_text_g.set_tooltip_text(str_tooltip_text_g)
         grid_colors.attach(self.spin_text_g, 1, 2, 1, 1)
 
         label_text_b = Gtk.Label(label=str_label_text_b)
@@ -238,6 +285,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_text_b = Gtk.SpinButton(adjustment=adj_text_b, hexpand=True)
         self.spin_text_b.set_numeric(True)
+        self.spin_text_b.set_tooltip_text(str_tooltip_text_b)
         grid_colors.attach(self.spin_text_b, 1, 3, 1, 1)
 
         label_text_a = Gtk.Label(label=str_label_text_a)
@@ -254,6 +302,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_text_a = Gtk.SpinButton(adjustment=adj_text_a, hexpand=True)
         self.spin_text_a.set_numeric(True)
+        self.spin_text_a.set_tooltip_text(str_tooltip_text_a)
         grid_colors.attach(self.spin_text_a, 1, 4, 1, 1)
 
         label_bg = Gtk.Label()
@@ -271,7 +320,7 @@ class MyWindow(Gtk.Window):
         # a box to contain label and separator box
         # label is F, F to make it as small as possible
         # box is T, T to make it as big as possible
-        hbox_bg = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        hbox_bg = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
         hbox_bg.pack_start(label_bg, False, False, 0)
         hbox_bg.pack_start(vbox_sep_bg, True, True, 0)
         grid_colors.attach(hbox_bg, 0, 5, 2, 1)
@@ -291,6 +340,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_bg_r = Gtk.SpinButton(adjustment=adj_bg_r, hexpand=True)
         self.spin_bg_r.set_numeric(True)
+        self.spin_bg_r.set_tooltip_text(str_tooltip_bg_r)
         grid_colors.attach(self.spin_bg_r, 1, 6, 1, 1)
 
         label_bg_g = Gtk.Label(label=str_label_bg_g)
@@ -307,6 +357,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_bg_g = Gtk.SpinButton(adjustment=adj_bg_g, hexpand=True)
         self.spin_bg_g.set_numeric(True)
+        self.spin_bg_g.set_tooltip_text(str_tooltip_bg_g)
         grid_colors.attach(self.spin_bg_g, 1, 7, 1, 1)
 
         label_bg_b = Gtk.Label(label=str_label_bg_b)
@@ -323,6 +374,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_bg_b = Gtk.SpinButton(adjustment=adj_bg_b, hexpand=True)
         self.spin_bg_b.set_numeric(True)
+        self.spin_bg_b.set_tooltip_text(str_tooltip_bg_b)
         grid_colors.attach(self.spin_bg_b, 1, 8, 1, 1)
 
         label_bg_a = Gtk.Label(label=str_label_bg_a)
@@ -339,6 +391,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_bg_a = Gtk.SpinButton(adjustment=adj_bg_a, hexpand=True)
         self.spin_bg_a.set_numeric(True)
+        self.spin_bg_a.set_tooltip_text(str_tooltip_bg_a)
         grid_colors.attach(self.spin_bg_a, 1, 9, 1, 1)
 
         # add the grid to the stack with a name and a title
@@ -357,6 +410,7 @@ class MyWindow(Gtk.Window):
 
         # combos can take keys and vals and will only diplay vals
         self.combo_position = Gtk.ComboBoxText()
+        self.combo_position.set_tooltip_text(str_tooltip_position)
         grid_other.attach(self.combo_position, 1, 0, 1, 1)
         for key, val in position_map.items():
             self.combo_position.append(key, val)
@@ -376,6 +430,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_width = Gtk.SpinButton(adjustment=adj_width, hexpand=True)
         self.spin_width.set_numeric(True)
+        self.spin_width.set_tooltip_text(str_tooltip_width)
         grid_other.attach(self.spin_width, 1, 1, 1, 1)
 
         label_font_size = Gtk.Label(label=str_label_font_size)
@@ -393,6 +448,7 @@ class MyWindow(Gtk.Window):
         self.spin_font_size = Gtk.SpinButton(adjustment=adj_font_size,
                 hexpand=True)
         self.spin_font_size.set_numeric(True)
+        self.spin_font_size.set_tooltip_text(str_tooltip_font_size)
         grid_other.attach(self.spin_font_size, 1, 2, 1, 1)
 
         label_corner = Gtk.Label(label=str_label_corner)
@@ -409,6 +465,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_corner = Gtk.SpinButton(adjustment=adj_corner, hexpand=True)
         self.spin_corner.set_numeric(True)
+        self.spin_corner.set_tooltip_text(str_tooltip_corner)
         grid_other.attach(self.spin_corner, 1, 3, 1, 1)
 
         label_border = Gtk.Label(label=str_label_border)
@@ -425,6 +482,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_border = Gtk.SpinButton(adjustment=adj_border, hexpand=True)
         self.spin_border.set_numeric(True)
+        self.spin_border.set_tooltip_text(str_tooltip_border)
         grid_other.attach(self.spin_border, 1, 4, 1, 1)
 
         label_top_pad = Gtk.Label(label=str_label_top_pad)
@@ -441,6 +499,7 @@ class MyWindow(Gtk.Window):
         )
         self.spin_top_pad = Gtk.SpinButton(adjustment=adj_top_pad, hexpand=True)
         self.spin_top_pad.set_numeric(True)
+        self.spin_top_pad.set_tooltip_text(str_tooltip_top_pad)
         grid_other.attach(self.spin_top_pad, 1, 5, 1, 1)
 
         label_bottom_pad = Gtk.Label(label=str_label_bottom_pad)
@@ -458,6 +517,7 @@ class MyWindow(Gtk.Window):
         self.spin_bottom_pad = Gtk.SpinButton(adjustment=adj_bottom_pad,
                 hexpand=True)
         self.spin_bottom_pad.set_numeric(True)
+        self.spin_bottom_pad.set_tooltip_text(str_tooltip_bottom_pad)
         grid_other.attach(self.spin_bottom_pad, 1, 6, 1, 1)
 
         label_side_pad = Gtk.Label(label=str_label_side_pad)
@@ -475,6 +535,7 @@ class MyWindow(Gtk.Window):
         self.spin_side_pad = Gtk.SpinButton(adjustment=adj_side_pad,
                 hexpand=True)
         self.spin_side_pad.set_numeric(True)
+        self.spin_side_pad.set_tooltip_text(str_tooltip_side_pad)
         grid_other.attach(self.spin_side_pad, 1, 7, 1, 1)
 
         # add the grid to the stack with a name and a title
@@ -513,17 +574,17 @@ class MyWindow(Gtk.Window):
         # load props or defaults
         self.load_config()
 
-        # do checkbox routines
-        self.check_caption_clicked(self.check_caption)
-        self.check_enabled_clicked(self.check_enabled)
+        # do switch routines
+        self.switch_caption_clicked(self.switch_caption, 0)
+        self.switch_enabled_clicked(self.switch_enabled, 0)
 
     # load values from config file
     def load_config(self):
 
         # set defaults
-        self.check_enabled.set_active(int(def_enabled))
+        self.switch_enabled.set_active(int(def_enabled))
         self.spin_delay.set_value(int(def_delay))
-        self.check_caption.set_active(int(def_caption))
+        self.switch_caption.set_active(int(def_caption))
 
         self.spin_text_r.set_value(int(def_text_r))
         self.spin_text_g.set_value(int(def_text_g))
@@ -571,35 +632,26 @@ class MyWindow(Gtk.Window):
                     # set values for keys
 
                     if "ENABLED" in key:
-                        self.check_enabled.set_active(int(val))
-
+                        self.switch_enabled.set_active(int(val))
                     if "DELAY" in key:
                         self.spin_delay.set_value(int(val))
-
                     if "CAPTION" in key:
-                        self.check_caption.set_active(int(val))
+                        self.switch_caption.set_active(int(val))
 
                     if "TEXT_R" in key:
                         self.spin_text_r.set_value(int(val))
-
                     if "TEXT_G" in key:
                         self.spin_text_g.set_value(int(val))
-
                     if "TEXT_B" in key:
                         self.spin_text_b.set_value(int(val))
-
                     if "TEXT_A" in key:
                         self.spin_text_a.set_value(int(val))
-
                     if "BG_R" in key:
                         self.spin_bg_r.set_value(int(val))
-
                     if "BG_G" in key:
                         self.spin_bg_g.set_value(int(val))
-
                     if "BG_B" in key:
                         self.spin_bg_b.set_value(int(val))
-
                     if "BG_A" in key:
                         self.spin_bg_a.set_value(int(val))
 
@@ -607,25 +659,18 @@ class MyWindow(Gtk.Window):
                         for short_pos, long_pos in position_map.items():
                             if val == short_pos:
                                 self.combo_position.set_active_id(short_pos)
-
                     if "WIDTH" in key:
                         self.spin_width.set_value(int(val))
-
                     if "FONT_SIZE" in key:
                         self.spin_font_size.set_value(int(val))
-
                     if "CORNER_RADIUS" in key:
                         self.spin_corner.set_value(int(val))
-
                     if "BORDER" in key:
                         self.spin_border.set_value(int(val))
-
                     if "TOP_PADDING" in key:
                         self.spin_top_pad.set_value(int(val))
-
                     if "BOTTOM_PADDING" in key:
                         self.spin_bottom_pad.set_value(int(val))
-
                     if "SIDE_PADDING" in key:
                         self.spin_side_pad.set_value(int(val))
 
@@ -640,10 +685,10 @@ class MyWindow(Gtk.Window):
             f.write("# DO NOT EDIT THIS FILE BY HAND!\n\n")
 
             # start writing options
-            f.write("ENABLED=" + str(int(self.check_enabled.get_active())) +
+            f.write("ENABLED=" + str(int(self.switch_enabled.get_active())) +
                     "\n")
             f.write("DELAY=" + str(int(self.spin_delay.get_value())) + "\n")
-            f.write("CAPTION=" + str(int(self.check_caption.get_active())) +
+            f.write("CAPTION=" + str(int(self.switch_caption.get_active())) +
                     "\n")
 
             f.write("TEXT_R=" + str(int(self.spin_text_r.get_value())) + "\n")
@@ -683,14 +728,15 @@ class MyWindow(Gtk.Window):
         # non-blocking subprocess
         subprocess.Popen(array)
 
-    def check_enabled_clicked(self, widget):
+    def switch_enabled_clicked(self, widget, gparam):
         if widget.get_active():
             self.spin_delay.set_sensitive(True)
-            self.check_caption.set_sensitive(True)
-            self.check_caption_clicked(self.check_caption)
+            self.switch_caption.set_sensitive(True)
+            self.switch_caption_clicked(self.switch_caption, 0)
         else:
             self.spin_delay.set_sensitive(False)
-            self.check_caption.set_sensitive(False)
+            self.switch_caption.set_sensitive(False)
+
             self.spin_text_r.set_sensitive(False)
             self.spin_text_g.set_sensitive(False)
             self.spin_text_b.set_sensitive(False)
@@ -699,6 +745,7 @@ class MyWindow(Gtk.Window):
             self.spin_bg_g.set_sensitive(False)
             self.spin_bg_b.set_sensitive(False)
             self.spin_bg_a.set_sensitive(False)
+
             self.combo_position.set_sensitive(False)
             self.spin_width.set_sensitive(False)
             self.spin_font_size.set_sensitive(False)
@@ -708,7 +755,7 @@ class MyWindow(Gtk.Window):
             self.spin_bottom_pad.set_sensitive(False)
             self.spin_side_pad.set_sensitive(False)
 
-    def check_caption_clicked(self, widget):
+    def switch_caption_clicked(self, widget, gparam):
         if widget.get_active():
             self.spin_text_r.set_sensitive(True)
             self.spin_text_g.set_sensitive(True)
@@ -718,6 +765,7 @@ class MyWindow(Gtk.Window):
             self.spin_bg_g.set_sensitive(True)
             self.spin_bg_b.set_sensitive(True)
             self.spin_bg_a.set_sensitive(True)
+
             self.combo_position.set_sensitive(True)
             self.spin_width.set_sensitive(True)
             self.spin_font_size.set_sensitive(True)
@@ -735,6 +783,7 @@ class MyWindow(Gtk.Window):
             self.spin_bg_g.set_sensitive(False)
             self.spin_bg_b.set_sensitive(False)
             self.spin_bg_a.set_sensitive(False)
+            
             self.combo_position.set_sensitive(False)
             self.spin_width.set_sensitive(False)
             self.spin_font_size.set_sensitive(False)
