@@ -60,9 +60,9 @@ echo "Done"
 # install gui
 echo -n "Installing GUI... "
 sudo cp "./gui/apod_linux_config.py" "/usr/bin"
-sudo cp "./gui/apod_linux_icon.png" "/usr/share/icons/hicolor/128x128/apps"
 cp "./gui/apod_linux.desktop" "${HOME}/.local/share/applications"
-sudo update-icon-caches /usr/share/icons/*
+sudo cp "./gui/apod_linux_icon.png" "/usr/share/icons/hicolor/128x128/apps"
+sudo update-icon-caches "/usr/share/icons/*"
 sudo gtk-update-icon-cache
 echo "Done"
 
