@@ -12,6 +12,8 @@ Comment[en_US]=Change your wallpaper to NASA's Astronomy Picture Of the Day
 Exec=python3 /usr/bin/apod_linux_config.py
 Icon=apod_linux_icon
 Type=Application
+Terminal=false
 Categories=Other
+Keywords=Wallpaper;APOD;Astronomy;NASA;
 
 # -)
