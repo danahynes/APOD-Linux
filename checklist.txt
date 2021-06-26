@@ -23,29 +23,23 @@ DONE: blocks on call to apod_linux.py when clicking "apply"
 DONE: why do we need full path to icon in .desktop?
 DONE: desktop file (put in ~/.local/share/applications for current user
       or /usr/share/applications for all)
-
-SOME: icon (works in dock, but not overview, AND MUST BE SQUARE, overview
-      might be a tkinter thing)
-      see svg notes below
-SOME: better icon for dock (not very sharp)
-      need an icon in every size, need to put in every size in every location
-      to account for every plank size
-      128 seems to work for application menu, but plank is scaling
-      maybe use an svg?
-SOME: run from applications menu: shows up twice in plank
+DONE: update README for gui
+DONE: icon
+DONE: better icon for dock
+DONE: run from applications menu: shows up twice in plank
       first is labeled "APOD_Linux" goes away after a minute, one labeled
       "APOD_Linux config" stays until window closed
       first is for python launcher, second is for window?
-      
-SOME: make pages for text color/bg color/other
+DONE: make pages for text color/bg color/other
       or back to R/G/B/A spins
       wider not taller
+
 SOME: project/github folders (like a folder just for gui stuff)
 SOME: bottom space between text and background is too big (extra line?)
       side padding is 0, but top/bottom is still like 5px (cant get rid of it)
 
+NA: add theme option to conf file and set theme at startup
+
 TODO: run apod_linux_login.py at startup (but only for current user)
-TODO: update README for gui
-TODO: add theme option to conf file and set theme at startup
 TODO: localize labels/buttons
 TODO: localize apod_linux.desktop
