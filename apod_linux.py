@@ -23,23 +23,36 @@ import urllib.request
 # Initialize
 #-------------------------------------------------------------------------------
 
+str_prog_name = "apod_linux"
+
 # NB: need pic_dir before setting up logging
 
 # get current user's home dir
 home_dir = os.path.expanduser("~")
 
 # the hidden dir to store the wallpaper and log file
-pic_dir = os.path.join(home_dir, ".apod_linux")
+pic_dir = os.path.join(home_dir, "." + str_prog_name)
 
-# get log file name`
-log_name = os.path.join(pic_dir, "apod_linux.log")
+# look for conf file
+conf_file = os.path.join(pic_dir, str_prog_name + ".conf")
+
+# get location of caption script
+cap_path = "/usr/bin/" + str_prog_name + "_caption.sh"
+
+# get log file name
+log_file = os.path.join(pic_dir, str_prog_name + ".log")
 
 # set up logging
-logging.basicConfig(filename = log_name, level = logging.DEBUG,
+logging.basicConfig(filename = log_file, level = logging.DEBUG,
         format = "%(asctime)s - %(message)s")
 
-# get lock file
-lock_file = os.open(f"/tmp/apod_linux.lock", os.O_WRONLY | os.O_CREAT)
+#-------------------------------------------------------------------------------
+# Prevent more than one instance running at a time (to avoid file collisions)
+#-------------------------------------------------------------------------------
+
+# get lock file (write-only, create if necessary)
+lock_file = os.open(f"/tmp/" + str_prog_name + ".lock",
+        os.O_WRONLY | os.O_CREAT)
 
 # check for existance of lock file
 try:
@@ -48,9 +61,10 @@ try:
 except IOError:
     already_running = True
 
+# a nother instance is running, log and exit normally
 if already_running:
-    logging.debug("already running")
-    sys.exit(1)
+    logging.debug("Already running")
+    sys.exit(0)
 
 # log start
 logging.debug("---------------------------------------------------------------")
@@ -59,17 +73,16 @@ logging.debug("Starting script")
 # defaults
 enabled = True
 delay = 30
-caption = False
-
-# look for conf file
+caption = True
 
 # NB: clean lines as such:
 # # this is a comment, ignored
-# FOO=BAR # split at equals, 0 is key, split val at #, 0 is val
+# FOO=BAR # split at equals, FOO is key, split val at #, BAR is val
+
 try:
-    conf_name = os.path.join(pic_dir, "apod_linux.conf")
-    if os.path.exists(conf_name):
-        with open(conf_name, "r") as f:
+
+    if os.path.exists(conf_file):
+        with open(conf_file, "r") as f:
             lines = f.readlines()
 
             # read key/value pairs from conf file
@@ -77,36 +90,34 @@ try:
                 line_clean = line.strip().upper()
 
                 # ignore comment lines or blanks or lines with no values
-                if line_clean.startswith("#") or \
-                    line_clean == "" or \
-                    not "=" in line_clean:
-                        continue
+                if line_clean.startswith("#") or line_clean == "":
+                    continue
 
                 # split key off at equals
                 key_val = line_clean.split("=")
                 key = key_val[0].strip()
 
                 # split val off ignoring trailing comments
-                val_array = key_val[1].split("#")
-                val = val_array[0].strip()
+                val = ""
+                if (len(key_val) > 1):
+                    val_array = key_val[1].split("#")
+                    val = val_array[0].strip()
 
                 # check if we are enabled
                 if key == "ENABLED":
-                    if val == "":
-                        val = enabled
-                    enabled = int(val)
+                    if val != "":
+                        enabled = int(val)
 
                 # get delay
                 if key == "DELAY":
-                    if val == "":
-                        val = delay
-                    delay = int(val)
+                    if val != "":
+                        delay = int(val)
 
                 # get caption
                 if key == "CAPTION":
-                    if val == "":
-                        val = caption
-                    caption = int(val)
+                    if val != "":
+                        caption = int(val)
+
 except Exception as e:
     logging.debug(str(e))
 
@@ -179,9 +190,6 @@ else:
 # if we have a valid pic_path
 if pic_path != None and caption:
     try:
-
-        # get location of caption script
-        cap_path = "/usr/bin/apod_linux_caption.sh"
 
         # get text to send
         cap_text = apod_data["explanation"]
