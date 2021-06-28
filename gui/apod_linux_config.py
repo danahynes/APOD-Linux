@@ -15,36 +15,25 @@ import logging
 import os
 import subprocess
 
+str_prog_name = "apod_linux"
+
 # find the config file
 home_dir = os.path.expanduser("~")
-pic_dir = os.path.join(home_dir, ".apod_linux")
-conf_file = os.path.join(pic_dir, "apod_linux.conf")
+pic_dir = os.path.join(home_dir, "." + str_prog_name)
+conf_file = os.path.join(pic_dir, str_prog_name + ".conf")
 
 # get log file name`
-log_name = os.path.join(pic_dir, "apod_linux.log")
+log_file = os.path.join(pic_dir, str_prog_name + ".log")
 
 # set up logging
-logging.basicConfig(filename = log_name, level = logging.DEBUG,
+logging.basicConfig(filename = log_file, level = logging.DEBUG,
         format = "%(asctime)s - %(message)s")
-
-# get lock file
-lock_file = os.open(f"/tmp/apod_linux_config.lock", os.O_WRONLY | os.O_CREAT)
-
-# check for existance of lock file
-try:
-    fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    already_running = False
-except IOError:
-    already_running = True
-
-if already_running:
-    logging.debug("already running")
-    sys.exit(1)
 
 # set defaults for first tab
 def_enabled = True
 def_delay = 30
 def_caption = True
+def_position = "BR"
 
 # set defaults for second tab
 def_text_r = 255
@@ -57,7 +46,6 @@ def_bg_b = 0
 def_bg_a = 75
 
 # set defaults for third tab
-def_position = "BR"
 def_width = 500
 def_font_size = 15
 def_corner = 15
@@ -138,6 +126,8 @@ position_map = {
     "BR" : str_br,
     "C"  : str_c
 }
+
+run_prog_cmd = "python3 /usr/bin/apod_linux.py & disown"
 
 # the main window class
 class MyWindow(Gtk.Window):
@@ -648,53 +638,74 @@ class MyWindow(Gtk.Window):
                     key = key_val[0].strip()
 
                     # split val off ignoring trailing comments
-                    val_array = key_val[1].split("#")
-                    val = val_array[0].strip()
+                    val = ""
+                    if (len(key_val) > 1):
+                        val_array = key_val[1].split("#")
+                        val = val_array[0].strip()
 
                     # set values for keys
 
-                    if "ENABLED" in key:
-                        self.switch_enabled.set_active(int(val))
-                    if "DELAY" in key:
-                        self.spin_delay.set_value(int(val))
-                    if "CAPTION" in key:
-                        self.switch_caption.set_active(int(val))
-
-                    if "TEXT_R" in key:
-                        self.spin_text_r.set_value(int(val))
-                    if "TEXT_G" in key:
-                        self.spin_text_g.set_value(int(val))
-                    if "TEXT_B" in key:
-                        self.spin_text_b.set_value(int(val))
-                    if "TEXT_A" in key:
-                        self.spin_text_a.set_value(int(val))
-                    if "BG_R" in key:
-                        self.spin_bg_r.set_value(int(val))
-                    if "BG_G" in key:
-                        self.spin_bg_g.set_value(int(val))
-                    if "BG_B" in key:
-                        self.spin_bg_b.set_value(int(val))
-                    if "BG_A" in key:
-                        self.spin_bg_a.set_value(int(val))
-
-                    if "POSITION" in key:
+                    if key == "ENABLED":
+                        if val != "":
+                            self.switch_enabled.set_active(int(val))
+                    if key == "DELAY":
+                        if val != "":
+                            self.spin_delay.set_value(int(val))
+                    if key == "CAPTION":
+                        if val != "":
+                            self.switch_caption.set_active(int(val))
+                    if key == "POSITION":
                         for short_pos, long_pos in position_map.items():
                             if val == short_pos:
                                 self.combo_position.set_active_id(short_pos)
-                    if "WIDTH" in key:
-                        self.spin_width.set_value(int(val))
-                    if "FONT_SIZE" in key:
-                        self.spin_font_size.set_value(int(val))
-                    if "CORNER_RADIUS" in key:
-                        self.spin_corner.set_value(int(val))
-                    if "BORDER" in key:
-                        self.spin_border.set_value(int(val))
-                    if "TOP_PADDING" in key:
-                        self.spin_top_pad.set_value(int(val))
-                    if "BOTTOM_PADDING" in key:
-                        self.spin_bottom_pad.set_value(int(val))
-                    if "SIDE_PADDING" in key:
-                        self.spin_side_pad.set_value(int(val))
+
+                    if key == "TEXT_R":
+                        if val != "":
+                            self.spin_text_r.set_value(int(val))
+                    if key == "TEXT_G":
+                        if val != "":
+                            self.spin_text_g.set_value(int(val))
+                    if key == "TEXT_B":
+                        if val != "":
+                            self.spin_text_b.set_value(int(val))
+                    if key == "TEXT_A":
+                        if val != "":
+                            self.spin_text_a.set_value(int(val))
+                    if key == "BG_R":
+                        if val != "":
+                            self.spin_bg_r.set_value(int(val))
+                    if key == "BG_G":
+                        if val != "":
+                            self.spin_bg_g.set_value(int(val))
+                    if key == "BG_B" in key:
+                        if val != "":
+                            self.spin_bg_b.set_value(int(val))
+                    if key == "BG_A":
+                        if val != "":
+                            self.spin_bg_a.set_value(int(val))
+
+                    if key == "WIDTH":
+                        if val != "":
+                            self.spin_width.set_value(int(val))
+                    if key == "FONT_SIZE":
+                        if val != "":
+                            self.spin_font_size.set_value(int(val))
+                    if key == "CORNER_RADIUS":
+                        if val != "":
+                            self.spin_corner.set_value(int(val))
+                    if key == "BORDER":
+                        if val != "":
+                            self.spin_border.set_value(int(val))
+                    if key == "TOP_PADDING":
+                        if val != "":
+                            if val != "":
+                                self.spin_top_pad.set_value(int(val))
+                    if key == "BOTTOM_PADDING":
+                        if val != "":
+                            self.spin_bottom_pad.set_value(int(val))
+                    if key == "SIDE_PADDING":
+                        if val != "":
+                            self.spin_side_pad.set_value(int(val))
 
     def save_config(self):
 
@@ -712,6 +723,13 @@ class MyWindow(Gtk.Window):
             f.write("DELAY=" + str(int(self.spin_delay.get_value())) + "\n")
             f.write("CAPTION=" + str(int(self.switch_caption.get_active())) +
                     "\n")
+                    
+            # fudge the position option from the array
+            val = self.combo_position.get_active_text()
+            for short_pos, long_pos in position_map.items():
+                if val == long_pos:
+                    f.write("POSITION=" + short_pos + "\n")
+                    break
 
             f.write("TEXT_R=" + str(int(self.spin_text_r.get_value())) + "\n")
             f.write("TEXT_G=" + str(int(self.spin_text_g.get_value())) + "\n")
@@ -722,12 +740,7 @@ class MyWindow(Gtk.Window):
             f.write("BG_B=" + str(int(self.spin_bg_b.get_value())) + "\n")
             f.write("BG_A=" + str(int(self.spin_bg_a.get_value())) + "\n")
 
-            # fudge the position option from the array
-            val = self.combo_position.get_active_text()
-            for short_pos, long_pos in position_map.items():
-                if val == long_pos:
-                    f.write("POSITION=" + short_pos + "\n")
-                    break
+
             f.write("WIDTH=" + str(int(self.spin_width.get_value())) + "\n")
             f.write("FONT_SIZE=" + str(int(self.spin_font_size.get_value())) +
                     "\n")
@@ -746,11 +759,10 @@ class MyWindow(Gtk.Window):
         logging.debug('GUI')
 
         # only run once, no listener
-        cmd = "python3 /usr/bin/apod_linux.py & disown"
-        array = cmd.split()
+        cmd_array = run_prog_cmd.split()
 
         # non-blocking subprocess
-        subprocess.Popen(array)
+        subprocess.Popen(cmd_array)
 
     def switch_enabled_clicked(self, widget, gparam):
         if widget.get_active():
