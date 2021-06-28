@@ -11,6 +11,7 @@
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
+import logging
 import os
 import subprocess
 
@@ -18,6 +19,27 @@ import subprocess
 home_dir = os.path.expanduser("~")
 pic_dir = os.path.join(home_dir, ".apod_linux")
 conf_file = os.path.join(pic_dir, "apod_linux.conf")
+
+# get log file name`
+log_name = os.path.join(pic_dir, "apod_linux.log")
+
+# set up logging
+logging.basicConfig(filename = log_name, level = logging.DEBUG,
+        format = "%(asctime)s - %(message)s")
+
+# get lock file
+lock_file = os.open(f"/tmp/apod_linux_config.lock", os.O_WRONLY | os.O_CREAT)
+
+# check for existance of lock file
+try:
+    fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    already_running = False
+except IOError:
+    already_running = True
+
+if already_running:
+    logging.debug("already running")
+    sys.exit(1)
 
 # set defaults for first tab
 def_enabled = True
@@ -48,7 +70,7 @@ def_side_pad = 10
 str_title = "APOD_Linux"
 
 str_label_enabled = "Enable " + str_title + ":"
-str_tooltip_enabled = "Enables or disables the APOD_Linux program"
+str_tooltip_enabled = "Enables or disables the " + str_title + " program"
 str_label_delay = "Delay (0-60):"
 str_tooltip_delay = "How long to wait (in seconds) for an internet connection \
 before downloading"
@@ -96,7 +118,7 @@ the screen"
 str_label_side_pad = "Side padding (0-100):"
 str_tooltip_side_pad = "The spacing between the caption and the sides of the \
 screen"
-str_tab_other = "Other"
+str_tab_sizes = "Sizes"
 
 str_button_ok = "OK"
 str_button_cancel = "Cancel"
@@ -205,6 +227,17 @@ class MyWindow(Gtk.Window):
         hbox_caption.pack_start(self.switch_caption, False, False, 0)
 
         grid_general.attach(hbox_caption, 1, 2, 1, 1)
+
+        label_position = Gtk.Label(label=str_label_position)
+        label_position.set_alignment(1, 0)
+        grid_general.attach(label_position, 0, 3, 1, 1)
+
+        # combos can take keys and vals and will only diplay vals
+        self.combo_position = Gtk.ComboBoxText()
+        self.combo_position.set_tooltip_text(str_tooltip_position)
+        grid_general.attach(self.combo_position, 1, 3, 1, 1)
+        for key, val in position_map.items():
+            self.combo_position.append(key, val)
 
         # add the grid to the stack with a name and a title
         stack.add_titled(grid_general, "general", str_tab_general)
@@ -400,25 +433,14 @@ class MyWindow(Gtk.Window):
         # the third tab
 
         # create a grid with inter-spacig
-        grid_other = Gtk.Grid()
-        grid_other.set_row_spacing(20)
-        grid_other.set_column_spacing(20)
-
-        label_position = Gtk.Label(label=str_label_position)
-        label_position.set_alignment(1, 0)
-        grid_other.attach(label_position, 0, 0, 1, 1)
-
-        # combos can take keys and vals and will only diplay vals
-        self.combo_position = Gtk.ComboBoxText()
-        self.combo_position.set_tooltip_text(str_tooltip_position)
-        grid_other.attach(self.combo_position, 1, 0, 1, 1)
-        for key, val in position_map.items():
-            self.combo_position.append(key, val)
+        grid_sizes = Gtk.Grid()
+        grid_sizes.set_row_spacing(20)
+        grid_sizes.set_column_spacing(20)
 
         # create all the labels and spins with adjustments and numeric only
         label_width = Gtk.Label(label=str_label_width)
         label_width.set_alignment(1, 0)
-        grid_other.attach(label_width, 0, 1, 1, 1)
+        grid_sizes.attach(label_width, 0, 0, 1, 1)
 
         adj_width = Gtk.Adjustment(
                 0.0,
@@ -431,11 +453,11 @@ class MyWindow(Gtk.Window):
         self.spin_width = Gtk.SpinButton(adjustment=adj_width, hexpand=True)
         self.spin_width.set_numeric(True)
         self.spin_width.set_tooltip_text(str_tooltip_width)
-        grid_other.attach(self.spin_width, 1, 1, 1, 1)
+        grid_sizes.attach(self.spin_width, 1, 0, 1, 1)
 
         label_font_size = Gtk.Label(label=str_label_font_size)
         label_font_size.set_alignment(1, 0)
-        grid_other.attach(label_font_size, 0, 2, 1, 1)
+        grid_sizes.attach(label_font_size, 0, 1, 1, 1)
 
         adj_font_size = Gtk.Adjustment(
                 0.0,
@@ -449,11 +471,11 @@ class MyWindow(Gtk.Window):
                 hexpand=True)
         self.spin_font_size.set_numeric(True)
         self.spin_font_size.set_tooltip_text(str_tooltip_font_size)
-        grid_other.attach(self.spin_font_size, 1, 2, 1, 1)
+        grid_sizes.attach(self.spin_font_size, 1, 1, 1, 1)
 
         label_corner = Gtk.Label(label=str_label_corner)
         label_corner.set_alignment(1, 0)
-        grid_other.attach(label_corner, 0, 3, 1, 1)
+        grid_sizes.attach(label_corner, 0, 2, 1, 1)
 
         adj_corner = Gtk.Adjustment(
                 0.0,
@@ -466,11 +488,11 @@ class MyWindow(Gtk.Window):
         self.spin_corner = Gtk.SpinButton(adjustment=adj_corner, hexpand=True)
         self.spin_corner.set_numeric(True)
         self.spin_corner.set_tooltip_text(str_tooltip_corner)
-        grid_other.attach(self.spin_corner, 1, 3, 1, 1)
+        grid_sizes.attach(self.spin_corner, 1, 2, 1, 1)
 
         label_border = Gtk.Label(label=str_label_border)
         label_border.set_alignment(1, 0)
-        grid_other.attach(label_border, 0, 4, 1, 1)
+        grid_sizes.attach(label_border, 0, 3, 1, 1)
 
         adj_border = Gtk.Adjustment(
                 0.0,
@@ -483,11 +505,11 @@ class MyWindow(Gtk.Window):
         self.spin_border = Gtk.SpinButton(adjustment=adj_border, hexpand=True)
         self.spin_border.set_numeric(True)
         self.spin_border.set_tooltip_text(str_tooltip_border)
-        grid_other.attach(self.spin_border, 1, 4, 1, 1)
+        grid_sizes.attach(self.spin_border, 1, 3, 1, 1)
 
         label_top_pad = Gtk.Label(label=str_label_top_pad)
         label_top_pad.set_alignment(1, 0)
-        grid_other.attach(label_top_pad, 0, 5, 1, 1)
+        grid_sizes.attach(label_top_pad, 0, 4, 1, 1)
 
         adj_top_pad = Gtk.Adjustment(
                 0.0,
@@ -500,11 +522,11 @@ class MyWindow(Gtk.Window):
         self.spin_top_pad = Gtk.SpinButton(adjustment=adj_top_pad, hexpand=True)
         self.spin_top_pad.set_numeric(True)
         self.spin_top_pad.set_tooltip_text(str_tooltip_top_pad)
-        grid_other.attach(self.spin_top_pad, 1, 5, 1, 1)
+        grid_sizes.attach(self.spin_top_pad, 1, 4, 1, 1)
 
         label_bottom_pad = Gtk.Label(label=str_label_bottom_pad)
         label_bottom_pad.set_alignment(1, 0)
-        grid_other.attach(label_bottom_pad, 0, 6, 1, 1)
+        grid_sizes.attach(label_bottom_pad, 0, 5, 1, 1)
 
         adj_bottom_pad = Gtk.Adjustment(
                 0.0,
@@ -518,11 +540,11 @@ class MyWindow(Gtk.Window):
                 hexpand=True)
         self.spin_bottom_pad.set_numeric(True)
         self.spin_bottom_pad.set_tooltip_text(str_tooltip_bottom_pad)
-        grid_other.attach(self.spin_bottom_pad, 1, 6, 1, 1)
+        grid_sizes.attach(self.spin_bottom_pad, 1, 5, 1, 1)
 
         label_side_pad = Gtk.Label(label=str_label_side_pad)
         label_side_pad.set_alignment(1, 0)
-        grid_other.attach(label_side_pad, 0, 7, 1, 1)
+        grid_sizes.attach(label_side_pad, 0, 6, 1, 1)
 
         adj_side_pad = Gtk.Adjustment(
                 0.0,
@@ -536,10 +558,10 @@ class MyWindow(Gtk.Window):
                 hexpand=True)
         self.spin_side_pad.set_numeric(True)
         self.spin_side_pad.set_tooltip_text(str_tooltip_side_pad)
-        grid_other.attach(self.spin_side_pad, 1, 7, 1, 1)
+        grid_sizes.attach(self.spin_side_pad, 1, 6, 1, 1)
 
         # add the grid to the stack with a name and a title
-        stack.add_titled(grid_other, "other", str_tab_other)
+        stack.add_titled(grid_sizes, "sizes", str_tab_sizes)
 
         # create a box for the buttons
         hbox_buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
@@ -721,6 +743,8 @@ class MyWindow(Gtk.Window):
 
     def run_prog(self):
 
+        logging.debug('GUI')
+
         # only run once, no listener
         cmd = "python3 /usr/bin/apod_linux.py & disown"
         array = cmd.split()
@@ -783,7 +807,7 @@ class MyWindow(Gtk.Window):
             self.spin_bg_g.set_sensitive(False)
             self.spin_bg_b.set_sensitive(False)
             self.spin_bg_a.set_sensitive(False)
-            
+
             self.combo_position.set_sensitive(False)
             self.spin_width.set_sensitive(False)
             self.spin_font_size.set_sensitive(False)
