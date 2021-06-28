@@ -8,6 +8,7 @@
 #------------------------------------------------------------------------------#
 
 # imports
+import fcntl
 import json
 import logging
 import os
@@ -36,6 +37,20 @@ log_name = os.path.join(pic_dir, "apod_linux.log")
 # set up logging
 logging.basicConfig(filename = log_name, level = logging.DEBUG,
         format = "%(asctime)s - %(message)s")
+
+# get lock file
+lock_file = os.open(f"/tmp/apod_linux.lock", os.O_WRONLY | os.O_CREAT)
+
+# check for existance of lock file
+try:
+    fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    already_running = False
+except IOError:
+    already_running = True
+
+if already_running:
+    logging.debug("already running")
+    sys.exit(1)
 
 # log start
 logging.debug("---------------------------------------------------------------")
