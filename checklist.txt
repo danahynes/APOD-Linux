@@ -33,12 +33,11 @@ DONE: run from applications menu: shows up twice in plank
 DONE: make pages for text color/bg color/other
       or back to R/G/B/A spins
       wider not taller
+DONE: single instance
 
 SOME: project/github folders (like a folder just for gui stuff)
 SOME: bottom space between text and background is too big (extra line?)
       side padding is 0, but top/bottom is still like 5px (cant get rid of it)
-
-NA: add theme option to conf file and set theme at startup
 
 TODO: run apod_linux_login.py at startup (but only for current user)
 TODO: localize labels/buttons
