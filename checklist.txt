@@ -8,6 +8,9 @@ unneeded code
 
 all debug flags off
 
+DONE - gui/apod_linux_config.py
+DONE - gui/apod_linux.desktop
+
 DONE - apod_linux_caption.sh
 DONE - apod_linux_config_orig.py
 DONE - apod_linux_config.py
@@ -39,6 +42,7 @@ SOME: project/github folders (like a folder just for gui stuff)
 SOME: bottom space between text and background is too big (extra line?)
       side padding is 0, but top/bottom is still like 5px (cant get rid of it)
 
+TODO: convert apod_linux_caption.sh to python3
 TODO: run apod_linux_login.py at startup (but only for current user)
 TODO: localize labels/buttons
 TODO: localize apod_linux.desktop
