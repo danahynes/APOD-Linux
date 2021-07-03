@@ -23,7 +23,7 @@ DONE - install.sh
 DONE - uninstall.sh
 
 DONE: blocks on call to apod_linux.py when clicking "apply"
-DONE: why do we need full path to icon in .desktop?
+
 DONE: desktop file (put in ~/.local/share/applications for current user
       or /usr/share/applications for all)
 DONE: update README for gui
@@ -42,7 +42,10 @@ SOME: project/github folders (like a folder just for gui stuff)
 SOME: bottom space between text and background is too big (extra line?)
       side padding is 0, but top/bottom is still like 5px (cant get rid of it)
 
+TODO: icon not working in .desktop file(works in dock, not in app menu)
+TODO: gather all todos from all files here
 TODO: convert apod_linux_caption.sh to python3
+TODO: make an apod_linux_config.sh to get/set options through cmd line
 TODO: run apod_linux_login.py at startup (but only for current user)
 TODO: localize labels/buttons
 TODO: localize apod_linux.desktop
