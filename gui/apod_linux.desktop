@@ -10,7 +10,7 @@
 Name[en_US]=APOD_Linux
 Comment[en_US]=Change your wallpaper to NASA's Astronomy Picture Of the Day
 Exec=python3 /usr/bin/apod_linux_config.py
-Icon=apod_linux_icon
+Icon=/usr/share/icons/hicolor/128x128/apps/apod_linux_icon.png
 Type=Application
 Terminal=false
 Categories=Other
